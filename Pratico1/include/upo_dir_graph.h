@@ -1,18 +1,19 @@
 #include <string.h>
-#include "upo_list.h" 
+#include "upo_list.h"
 
 #ifndef UPO_DIR_GRAPH_H
 #define UPO_DIR_GRAPH_H
 
-typedef struct upo_dirgraph_s* upo_dirgraph_t;
-typedef struct upo_dir_edge_s* upo_dir_edge_t;
+typedef struct upo_dirgraph_s *upo_dirgraph_t;
+typedef struct upo_dir_edge_s *upo_dir_edge_t;
 
 /**
  * @brief Definizione della struttura per rappresentare un arco diretto
  */
-struct upo_dir_edge_s {
+struct upo_dir_edge_s
+{
     int from; /**< Vertice da cui l'arco esce. */
-    int to; /**< Vertice nel quale l'arco entra. */
+    int to;   /**< Vertice nel quale l'arco entra. */
 };
 
 /**
@@ -142,7 +143,6 @@ int upo_remove_edge(upo_dirgraph_t graph, int vertex1, int vertex2);
  */
 int upo_are_adj(upo_dirgraph_t graph, int vertex1, int vertex2);
 
-
 /**
  * @brief Controlla se il grafo e' vuoto
  *
@@ -193,8 +193,6 @@ upo_list upo_get_inc_edg(upo_dirgraph_t graph, int vertex);
  * @param graph il grafo
  * @return una stringa rappresentante il grafo
  */
-char* upo_print_graph(upo_dirgraph_t graph);
-
+char *upo_print_graph(upo_dirgraph_t graph);
 
 #endif /* GRAPH_H */
-

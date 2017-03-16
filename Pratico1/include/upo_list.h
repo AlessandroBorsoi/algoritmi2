@@ -19,17 +19,19 @@ typedef void (*freeFunction)(void *);
 /**
  *@brief Nodo della lista
  */
-typedef struct upo_list_node {
-    void *element; /**< Contenuto del nodo. */
+typedef struct upo_list_node
+{
+    void *element;              /**< Contenuto del nodo. */
     struct upo_list_node *next; /**< Prossimo elemento. */
 } upo_list_node;
 
 /**
  *@brief Lista generica. 
  */
-typedef struct upo_list {
-    int logicalLength; /**< Numero di elementi della lista. */
-    int elementSize; /**< Dimensione di un elemento (usata per create e destroy). */
+typedef struct upo_list
+{
+    int logicalLength;   /**< Numero di elementi della lista. */
+    int elementSize;     /**< Dimensione di un elemento (usata per create e destroy). */
     upo_list_node *head; /**< Puntatore al primo nodo della lista. */
     upo_list_node *tail; /**< Puntatore all'ultimo nodo della lista. */
     freeFunction freeFn; /**< Funzione di free del contenuto della lista. */
@@ -38,7 +40,7 @@ typedef struct upo_list {
 /**
  * @brief Tipo iteratore
  */
-typedef upo_list_node* upo_iterator;
+typedef upo_list_node *upo_iterator;
 
 /**
  * @brief Crea una nuova lista vuota.
@@ -47,7 +49,7 @@ typedef upo_list_node* upo_iterator;
  * @param freeFn un puntatore ad una funzione per disallocare gli elementi della lista
  * \return una nuova lista vuota
  */
-upo_list* upo_create_list(int elementSize, freeFunction freeFn);
+upo_list *upo_create_list(int elementSize, freeFunction freeFn);
 
 /**
  * @brief Disalloca una lista
@@ -62,7 +64,7 @@ void upo_destroy_list(upo_list *list);
  * @param list la lista 
  * @param element l'elemento da aggiungere
  */
-void upo_add_first(upo_list* list, void* element);
+void upo_add_first(upo_list *list, void *element);
 
 /**
  * @brief Aggiunge un elemento in coda alla lista
@@ -86,7 +88,7 @@ int upo_list_size(upo_list *list);
  * @param list la lista 
  * \return il primo elemento della lista
  */
-void* upo_get_first(upo_list *list);
+void *upo_get_first(upo_list *list);
 
 /**
  * @brief Restituisce un puntatore all'ultimo elemento della lista
@@ -94,7 +96,7 @@ void* upo_get_first(upo_list *list);
  * @param list la lista 
  * \return l'ultimo elemento della lista
  */
-void* upo_get_last(upo_list *list);
+void *upo_get_last(upo_list *list);
 
 /**
  * @brief Restituisce un puntatore all'elemento della lista di indice index
@@ -103,7 +105,7 @@ void* upo_get_last(upo_list *list);
  * @param index l'indice dell'elemento da restituire
  * \return l'elemento della lista di indice index
  */
-void* upo_get(upo_list* list, int index);
+void *upo_get(upo_list *list, int index);
 
 /**
  * @brief Rimuove e restituisce un puntatore al primo elemento della lista
@@ -111,7 +113,7 @@ void* upo_get(upo_list* list, int index);
  * @param list la lista 
  * \return il primo elemento della lista
  */
-void* upo_remove_first(upo_list *list);
+void *upo_remove_first(upo_list *list);
 
 /**
  * @brief Rimuove e restituisce un puntatore all'ultimo elemento della lista
@@ -119,7 +121,7 @@ void* upo_remove_first(upo_list *list);
  * @param list la lista 
  * \return l'ultimo elemento della lista
  */
-void* upo_remove_last(upo_list *list);
+void *upo_remove_last(upo_list *list);
 
 /**
  * @brief Rimuove e restituisce un puntatore all'elemento della lista di indice index
@@ -128,7 +130,7 @@ void* upo_remove_last(upo_list *list);
  * @param index l'indice dell'elemento da rimuovere
  * \return l'elemento della lista di indice index
  */
-void* upo_remove(upo_list *list, int index);
+void *upo_remove(upo_list *list, int index);
 
 /**
  * @brief Crea un iteratore della lista
@@ -144,7 +146,7 @@ upo_iterator upo_get_list_iterator(upo_list *list);
  * @param iterator l'iteratore 
  * \return l'elemento puntato dall'iteratore
  */
-void* upo_get_iterator_element(upo_iterator iterator);
+void *upo_get_iterator_element(upo_iterator iterator);
 
 /**
  * @brief Restituisce l'iteratore che punta all'elemento successivo della lista
@@ -154,4 +156,3 @@ void* upo_get_iterator_element(upo_iterator iterator);
  */
 upo_iterator upo_get_next(upo_iterator iterator);
 #endif /* UPO_LIST_H */
-
