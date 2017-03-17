@@ -45,6 +45,8 @@ int upo_dirgraph_destroy(upo_dirgraph_t graph)
  */
 int upo_num_vertices(upo_dirgraph_t graph)
 {
+    if (graph == NULL)
+        return -1;
     return graph->n;
 }
 
