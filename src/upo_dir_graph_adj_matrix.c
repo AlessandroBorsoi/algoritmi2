@@ -14,6 +14,16 @@ upo_dirgraph_t upo_dirgraph_create(int n)
         perror("Unable to create the direct graph");
         abort();
     }
+    if (n > 0)
+    {
+        graph->adj = malloc(sizeof(int) * n);
+        for (int i = 0; i < n; ++i)
+            graph->adj[i] = malloc(sizeof(int) * n);
+    }
+    else
+    {
+        graph->adj = NULL;
+    }
     graph->n = n;
     return graph;
 }
@@ -29,6 +39,13 @@ int upo_dirgraph_destroy(upo_dirgraph_t graph)
 {
     if (graph != NULL)
     {
+        int n = upo_num_vertices(graph);
+        if (n > 0)
+        {
+            for (int i = 0; i < n; ++i)
+                free(graph->adj[i]);
+            free(graph->adj);
+        }
         free(graph);
         return 1;
     }
@@ -174,8 +191,14 @@ upo_list upo_get_inc_edg(upo_dirgraph_t graph, int vertex)
  */
 int upo_add_vertex(upo_dirgraph_t graph)
 {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    if (graph == NULL)
+        return -1;
+    if (graph != NULL)
+    {
+        graph->n += 1;
+        return 1;
+    }
+    return 0;
 }
 
 /**
@@ -187,8 +210,11 @@ int upo_add_vertex(upo_dirgraph_t graph)
  */
 int upo_has_vertex(upo_dirgraph_t graph, int vertex)
 {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    if (graph == NULL)
+        return -1;
+    if (vertex < upo_num_vertices(graph))
+        return 1;
+    return 0;
 }
 
 /**
@@ -200,8 +226,14 @@ int upo_has_vertex(upo_dirgraph_t graph, int vertex)
  */
 int upo_remove_vertex(upo_dirgraph_t graph, int vertex)
 {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    if (graph == NULL)
+        return -1;
+    if (upo_num_vertices(graph) > 0)
+    {   
+        graph->n -= 1;
+        return 1;
+    }
+    return 0;
 }
 
 /**
