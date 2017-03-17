@@ -1,4 +1,4 @@
-Implementazione di grafi diretti con matrici di adiacenza
+# Implementazione di grafi diretti con matrici di adiacenza
 
 Viene definita la versione pubblica di Grafo Diretto upo_dir_graph.h e 
 la versione privata di Grafo Diretto implementato con matrici di adiacenza upo_dir_graph_adj_matrix.h.

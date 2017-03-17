@@ -1,4 +1,3 @@
-
 #include "upo_dir_graph_adj_matrix.h"
 
 /**
@@ -9,8 +8,14 @@
  */
 upo_dirgraph_t upo_dirgraph_create(int n)
 {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    upo_dirgraph_t graph = malloc(sizeof(struct upo_dirgraph_s));
+    if (graph == NULL)
+    {
+        perror("Unable to create the direct graph");
+        abort();
+    }
+    graph->n = n;
+    return graph;
 }
 
 /**
@@ -22,8 +27,14 @@ upo_dirgraph_t upo_dirgraph_create(int n)
  */
 int upo_dirgraph_destroy(upo_dirgraph_t graph)
 {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    if (graph != NULL)
+    {
+        free(graph);
+        return 1;
+    }
+    if (graph == NULL)
+        return -1;
+    return 0;
 }
 
 /**

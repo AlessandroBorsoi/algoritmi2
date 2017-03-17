@@ -1,4 +1,3 @@
-
 #ifndef UPO_DIR_GRAPH_ADJ_MATRIX_H
 #define UPO_DIR_GRAPH_ADJ_MATRIX_H
 
