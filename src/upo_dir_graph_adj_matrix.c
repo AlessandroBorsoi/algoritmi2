@@ -479,6 +479,7 @@ char *upo_print_graph(upo_dirgraph_t graph)
             list = upo_get_inc_out_edg(graph, i);
             for (int j = 0; j < upo_list_size(list); j++)
                 pos+= sprintf(&string[pos], " %d -> %d;\n", ((upo_dir_edge_t)upo_get(list, j))->from, ((upo_dir_edge_t)upo_get(list, j))->to);
+            upo_destroy_list(list);
         }
     }
     return string;
