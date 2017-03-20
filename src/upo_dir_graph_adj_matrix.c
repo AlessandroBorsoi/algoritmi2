@@ -28,20 +28,17 @@ upo_dirgraph_t upo_dirgraph_create(int n)
  */
 int upo_dirgraph_destroy(upo_dirgraph_t graph)
 {
+    if (graph == NULL)
+        return -1;
     if (graph != NULL)
     {
         int n = upo_num_vertices(graph);
-        if (n > 0)
-        {
-            for (int i = 0; i < n; i++)
-                free(graph->adj[i]);
-            free(graph->adj);
-        }
+        for (int i = 0; i < n; i++)
+            free(graph->adj[i]);
+        free(graph->adj);
         free(graph);
         return 1;
     }
-    if (graph == NULL)
-        return -1;
     return 0;
 }
 
@@ -274,19 +271,33 @@ int upo_add_vertex(upo_dirgraph_t graph)
         return -1;
     if (graph != NULL)
     {
-        int n = upo_num_vertices(graph);
-        ++n;
-        int** newAdj = calloc(sizeof(int*), n);
-        for (int i = 0; i < n; i++)
-            newAdj[i] = calloc(sizeof(int), n);
-
-        for (int i = 0; i < n - 1; i++)
+        int n = upo_num_vertices(graph);            // Controllo la dimensione della matrice attuale
+        ++n;                                        // Incremento n alla nuova dimensione
+        int** newAdj = calloc(sizeof(int*), n);     // Alloco lo spazio per una dimensione della matrice.
+        if (newAdj == NULL)                         // Uso calloc per inizializzare a 0 gli elementi della nuova matrice.
+        {
+            perror("Unable to create the new adj matrix");
+            abort();
+        }
+        for (int i = 0; i < n; i++)                 // Per ogni riga, alloco lo spazio per una colonna
+        {
+            newAdj[i] = calloc(sizeof(int), n);     // Uso calloc per inizializzare a 0 gli elementi della nuova matrice.
+            if (newAdj[i] == NULL)
+            {
+                perror("Unable to create the new adj matrix row");
+                abort();
+            }
+        }
+        for (int i = 0; i < n - 1; i++)         
             for (int j = 0; j < n - 1; j++)
-                newAdj[i][j] = graph->adj[i][j];
-        graph->adj = newAdj;
+                newAdj[i][j] = graph->adj[i][j];    // Copio gli elementi della vecchia matrice in quella nuova maggiorata di 1
+        int** oldAdj = graph->adj;                  // Memorizzo la vecchia matrice per poterne liberare la memoria
+        graph->adj = newAdj;                        // Ora la struttura punta alla matrice con un vertice aggiunto
         graph->n = n;
 
-        // TODO: free old matrix and malloc checks
+        for (int i = 0; i < n - 1; i++)             // Libero lo spazio occupato dalla vecchia matrice
+            free(oldAdj[i]);
+        free(oldAdj);
 
         return 1;
     }
@@ -320,30 +331,47 @@ int upo_remove_vertex(upo_dirgraph_t graph, int vertex)
 {
     if (graph == NULL)
         return -1;
-    int n = upo_num_vertices(graph);
-    if (n > 0 && vertex < n)
-    {
-        --n;
-        int** newAdj = calloc(sizeof(int*), n);
-        for (int i = 0; i < n; i++)
-            newAdj[i] = calloc(sizeof(int), n);
-
-        int iOffset = 0;
-        int jOffset = 0;
-        for (int i = 0; i < n; i++)
+    int n = upo_num_vertices(graph);                // Controllo la dimensione della matrice attuale
+    if (n > 0 && vertex < n)                        // Procedo alla rimozione di un vertice solo se ce ne sono
+    {                                               // e se il vertice da eliminare è presente
+        --n;                                        // Decremento la dimensione per la nuova matrice.
+        int** newAdj = calloc(sizeof(int*), n);     // Uso calloc per inizializzare a 0 gli elementi della nuova matrice.
+        if (newAdj == NULL)                         
         {
-            if (i >= vertex) iOffset = 1;
+            perror("Unable to create the new adj matrix");
+            abort();
+        }
+        for (int i = 0; i < n; i++)                 // Per ogni riga, alloco lo spazio per una colonna
+        {
+            newAdj[i] = calloc(sizeof(int), n);     // Uso calloc per inizializzare a 0 gli elementi della nuova matrice.
+            if (newAdj[i] == NULL)
+            {
+                perror("Unable to create the new adj matrix row");
+                abort();
+            }
+        }
+
+        int iOffset = 0;                            // Gli offset servono per tenere traccia della riga e della colonna
+        int jOffset = 0;                            // da 'saltare' durante la copia della matrice vecchia in quella nuova.
+        for (int i = 0; i < n; i++)                 // Quando il loop arriva alla riga/colonna da eliminare, la salta aggiungendo
+        {                                           // 1 agli indici e quindi non copiando la cella
+            if (i >= vertex) 
+                iOffset = 1;
             for (int j = 0; j < n; j++)
             {
-                if (j >= vertex) jOffset = 1;
-                newAdj[i][j] = graph->adj[i + iOffset][j + jOffset];
+                if (j >= vertex) 
+                    jOffset = 1;
+                newAdj[i][j] = graph->adj[i + iOffset][j + jOffset];    // Vengono copiati i valori dalla matrice vecchia a quella nuova
             }
             jOffset = 0;
         }
-        graph->adj = newAdj;
+        int** oldAdj = graph->adj;                  // Memorizzo la vecchia matrice per poterne liberare la memoria
+        graph->adj = newAdj;                        // Ora la struttura punta alla matrice con un vertice aggiunto
         graph->n = n;
 
-        // TODO: free old matrix and malloc checks
+        for (int i = 0; i < n + 1; i++)             // Libero lo spazio occupato dalla vecchia matrice
+            free(oldAdj[i]);
+        free(oldAdj);
 
         return 1;
     }

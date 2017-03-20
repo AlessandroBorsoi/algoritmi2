@@ -19,11 +19,6 @@ void test_create_destroy()
 
     assert(graph != NULL);
     assert(upo_dirgraph_destroy(graph) == 1);
-
-    graph = upo_dirgraph_create();
-
-    assert(graph != NULL);
-    assert(upo_dirgraph_destroy(graph) == 1);
 }
 
 void test_add_remove_vertex()
@@ -362,30 +357,30 @@ int main()
     test_add_remove_vertex();
     printf("OK\n");
 
-    printf("Test case 'add/remove edges'... ");
-    fflush(stdout);
-    test_add_remove_edges();
-    printf("OK\n");
+    // printf("Test case 'add/remove edges'... ");
+    // fflush(stdout);
+    // test_add_remove_edges();
+    // printf("OK\n");
 
-    printf("Test case 'vertex degree'... ");
-    fflush(stdout);
-    test_vertex_degree();
-    printf("OK\n");
+    // printf("Test case 'vertex degree'... ");
+    // fflush(stdout);
+    // test_vertex_degree();
+    // printf("OK\n");
 
-    printf("Test case 'adjacency'... ");
-    fflush(stdout);
-    test_adjacency();
-    printf("OK\n");
+    // printf("Test case 'adjacency'... ");
+    // fflush(stdout);
+    // test_adjacency();
+    // printf("OK\n");
 
-    printf("Test case 'incidence'... ");
-    fflush(stdout);
-    test_incidence();
-    printf("OK\n");
+    // printf("Test case 'incidence'... ");
+    // fflush(stdout);
+    // test_incidence();
+    // printf("OK\n");
 
-    printf("Test case 'print graph'... ");
-    fflush(stdout);
-    test_print_graph();
-    printf("OK\n");
+    // printf("Test case 'print graph'... ");
+    // fflush(stdout);
+    // test_print_graph();
+    // printf("OK\n");
 
     return 0;
 }
