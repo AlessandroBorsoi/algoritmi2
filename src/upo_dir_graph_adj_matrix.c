@@ -436,6 +436,22 @@ int upo_are_adj(upo_dirgraph_t graph, int vertex1, int vertex2)
  */
 char *upo_print_graph(upo_dirgraph_t graph)
 {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    char* string = NULL;
+    int n = upo_num_vertices(graph);
+    if (n > 0)
+    {
+        int pos = 0;
+        int verticesBytes = sizeof(char) * 15 * n;
+        int edgesBytes = sizeof(char) * 15 * upo_num_edges(graph);
+        string = malloc(verticesBytes + edgesBytes);
+        upo_list* list = NULL;
+        for (int i = 0; i < n; i++)
+        {
+            pos+= sprintf(&string[pos], "Vertice: %d;\n", i);
+            list = upo_get_inc_out_edg(graph, i);
+            for (int j = 0; j < upo_list_size(list); j++)
+                pos+= sprintf(&string[pos], " %d -> %d;\n", ((upo_dir_edge_t)upo_get(list, j))->from, ((upo_dir_edge_t)upo_get(list, j))->to);
+        }
+    }
+    return string;
 }

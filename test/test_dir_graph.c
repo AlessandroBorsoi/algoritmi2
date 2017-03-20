@@ -327,8 +327,26 @@ void test_incidence()
 void test_print_graph()
 {
     upo_dirgraph_t graph = NULL;
-    char* graphString = upo_print_graph(graph);
-    printf("%s", graphString);
+    char* string = upo_print_graph(graph);
+
+    assert(string == NULL);
+
+    graph = upo_dirgraph_create();
+    string = upo_print_graph(graph);
+
+    assert(string == NULL);
+
+    upo_add_vertex(graph);
+    upo_add_vertex(graph);
+    upo_add_vertex(graph);
+    upo_add_edge(graph, 0, 1);
+    upo_add_edge(graph, 0, 2);
+    upo_add_edge(graph, 1, 2);
+    upo_add_edge(graph, 2, 1);
+
+    string = upo_print_graph(graph);
+
+    printf("%s", string);
     upo_dirgraph_destroy(graph);
 }
 
