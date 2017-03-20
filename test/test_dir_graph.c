@@ -177,14 +177,14 @@ void test_adjacency()
 
     assert(upo_are_adj(graph, 0, 1) == -1);
     assert(upo_is_graph_empty(graph) == -1);
-    assert(upo_get_adj_vert(graph, 0) == NULL);
+    upo_list* list = upo_get_adj_vert(graph, 0);
+    assert(list == NULL);
 
     graph = upo_dirgraph_create();
 
     assert(upo_are_adj(graph, 0, 1) == 0);
     assert(upo_is_graph_empty(graph) == 1);
-    upo_list* list = upo_get_adj_vert(graph, 0);
-    // assert(list != NULL);
+    assert(list == NULL);
 
     upo_add_vertex(graph);
     upo_add_vertex(graph);

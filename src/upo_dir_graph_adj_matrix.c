@@ -154,7 +154,7 @@ upo_list *upo_get_adj_vert(upo_dirgraph_t graph, int vertex)
 {
     upo_list* list = NULL;
     int n = upo_num_vertices(graph);
-    if (graph != NULL && n > 0)
+    if (n > 0)
     {
         list = upo_create_list(sizeof(int), NULL);
         for (int i = 0; i < n; i++)
