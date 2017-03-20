@@ -181,7 +181,7 @@ upo_list *upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex)
 {
     upo_list* list = NULL;
     int n = upo_num_vertices(graph);
-    if (graph != NULL && n > 0)
+    if (n > 0)
     {
         list = upo_create_list(sizeof(struct upo_dir_edge_s), NULL);
         for (int i = 0; i < n; i++)
@@ -209,7 +209,7 @@ upo_list *upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex)
 {
     upo_list* list = NULL;
     int n = upo_num_vertices(graph);
-    if (graph != NULL && n > 0)
+    if (n > 0)
     {
         list = upo_create_list(sizeof(struct upo_dir_edge_s), NULL);
         for (int i = 0; i < n; i++)
@@ -235,8 +235,30 @@ upo_list *upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex)
  */
 upo_list *upo_get_inc_edg(upo_dirgraph_t graph, int vertex)
 {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    upo_list* list = NULL;
+    int n = upo_num_vertices(graph);
+    if (n > 0)
+    {
+        list = upo_create_list(sizeof(struct upo_dir_edge_s), NULL);
+        for (int i = 0; i < n; i++)
+        {
+            if (graph->adj[vertex][i] == 1)
+            {
+                upo_dir_edge_t element = malloc(sizeof(struct upo_dir_edge_s));
+                element->from = vertex;
+                element->to = i;
+                upo_add_last(list, element);
+            }
+            if (graph->adj[i][vertex] == 1)
+            {
+                upo_dir_edge_t element = malloc(sizeof(struct upo_dir_edge_s));
+                element->from = i;
+                element->to = vertex;
+                upo_add_last(list, element);
+            }
+        }
+    }
+    return list;
 }
 
 /**

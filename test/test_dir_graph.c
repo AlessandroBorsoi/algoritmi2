@@ -5,8 +5,9 @@ static void test_create_destroy();
 static void test_add_remove_vertex();
 static void test_add_remove_edges();
 static void test_vertex_degree();
-static void test_print_graph();
 static void test_adjacency();
+static void test_incidence();
+static void test_print_graph();
 
 void test_create_destroy()
 {
@@ -17,13 +18,11 @@ void test_create_destroy()
     graph = upo_dirgraph_create();
 
     assert(graph != NULL);
-
     assert(upo_dirgraph_destroy(graph) == 1);
 
     graph = upo_dirgraph_create();
 
     assert(graph != NULL);
-
     assert(upo_dirgraph_destroy(graph) == 1);
 }
 
@@ -237,6 +236,91 @@ void test_adjacency()
     assert(upo_list_size(list) == 1);
     assert(*((int*)upo_get(list, 0)) == 3);
 
+    upo_destroy_list(list);
+    upo_dirgraph_destroy(graph);
+}
+
+void test_incidence()
+{
+    upo_dirgraph_t graph = NULL;
+
+    assert(upo_get_inc_out_edg(graph, 0) == NULL);
+    assert(upo_get_inc_in_edg(graph, 0) == NULL);
+    assert(upo_get_inc_edg(graph, 0) == NULL);
+
+    graph = upo_dirgraph_create();
+
+    assert(upo_get_inc_out_edg(graph, 0) == NULL);
+    assert(upo_get_inc_in_edg(graph, 0) == NULL);
+    assert(upo_get_inc_edg(graph, 0) == NULL);
+    
+    upo_add_vertex(graph);
+    upo_add_vertex(graph);
+    upo_add_vertex(graph);
+    upo_add_vertex(graph);
+    upo_add_vertex(graph);
+    upo_add_edge(graph, 0, 1);
+    upo_add_edge(graph, 0, 2);
+    upo_add_edge(graph, 0, 3);
+    upo_add_edge(graph, 0, 4);
+
+    upo_list* list = upo_get_inc_out_edg(graph, 0);
+
+    assert(list != NULL);
+    assert(upo_list_size(list) == 4);
+    assert(((upo_dir_edge_t)upo_get(list, 0))->from == 0);
+    assert(((upo_dir_edge_t)upo_get(list, 0))->to == 1);
+    assert(((upo_dir_edge_t)upo_get(list, 1))->from == 0);
+    assert(((upo_dir_edge_t)upo_get(list, 1))->to == 2);
+    assert(((upo_dir_edge_t)upo_get(list, 2))->from == 0);
+    assert(((upo_dir_edge_t)upo_get(list, 2))->to == 3);
+    assert(((upo_dir_edge_t)upo_get(list, 3))->from == 0);
+    assert(((upo_dir_edge_t)upo_get(list, 3))->to == 4);
+
+    upo_destroy_list(list);
+    list = upo_get_inc_out_edg(graph, 1);
+
+    assert(list != NULL);
+    assert(upo_list_size(list) == 0);
+
+    upo_destroy_list(list);
+    list = upo_get_inc_in_edg(graph, 0);
+
+    assert(list != NULL);
+    assert(upo_list_size(list) == 0);
+
+    upo_destroy_list(list);
+    list = upo_get_inc_in_edg(graph, 1);
+
+    assert(list != NULL);
+    assert(upo_list_size(list) == 1);
+    assert(((upo_dir_edge_t)upo_get(list, 0))->from == 0);
+    assert(((upo_dir_edge_t)upo_get(list, 0))->to == 1);
+
+    upo_destroy_list(list);
+    list = upo_get_inc_edg(graph, 0);
+
+    assert(list != NULL);
+    assert(upo_list_size(list) == 4);
+    assert(((upo_dir_edge_t)upo_get(list, 0))->from == 0);
+    assert(((upo_dir_edge_t)upo_get(list, 0))->to == 1);
+    assert(((upo_dir_edge_t)upo_get(list, 1))->from == 0);
+    assert(((upo_dir_edge_t)upo_get(list, 1))->to == 2);
+    assert(((upo_dir_edge_t)upo_get(list, 2))->from == 0);
+    assert(((upo_dir_edge_t)upo_get(list, 2))->to == 3);
+    assert(((upo_dir_edge_t)upo_get(list, 3))->from == 0);
+    assert(((upo_dir_edge_t)upo_get(list, 3))->to == 4);
+
+    upo_destroy_list(list);
+    list = upo_get_inc_edg(graph, 1);
+
+    assert(list != NULL);
+    assert(upo_list_size(list) == 1);
+    assert(((upo_dir_edge_t)upo_get(list, 0))->from == 0);
+    assert(((upo_dir_edge_t)upo_get(list, 0))->to == 1);
+
+    upo_destroy_list(list);
+
     upo_dirgraph_destroy(graph);
 }
 
@@ -273,6 +357,11 @@ int main()
     printf("Test case 'adjacency'... ");
     fflush(stdout);
     test_adjacency();
+    printf("OK\n");
+
+    printf("Test case 'incidence'... ");
+    fflush(stdout);
+    test_incidence();
     printf("OK\n");
 
     printf("Test case 'print graph'... ");
