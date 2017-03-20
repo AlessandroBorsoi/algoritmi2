@@ -159,9 +159,10 @@ upo_list *upo_get_adj_vert(upo_dirgraph_t graph, int vertex)
         list = upo_create_list(sizeof(int), NULL);
         for (int i = 0; i < n; i++)
         {
-            if (graph->adj[i][vertex] == 1)
+            if (upo_are_adj(graph, vertex, i) == 1)
             {
                 int* element = malloc(sizeof(int));
+                *element = i;
                 upo_add_last(list, element);
             }
         }

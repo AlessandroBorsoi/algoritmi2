@@ -194,9 +194,14 @@ void test_adjacency()
     assert(upo_are_adj(graph, 1, 0) == 1);
     assert(upo_are_adj(graph, 3, 7) == 0);
     assert(upo_is_graph_empty(graph) == 0);
-    list = upo_get_adj_vert(graph, 0);
-    // assert(list != NULL);
 
+    list = upo_get_adj_vert(graph, 1);
+
+    assert(list != NULL);
+    assert(upo_list_size(list) == 1);
+    assert(*((int*)upo_get(list, 0)) == 0);
+
+    upo_destroy_list(list);
     upo_add_edge(graph, 1, 0);
     upo_remove_edge(graph, 0, 1);
 
@@ -204,8 +209,33 @@ void test_adjacency()
     assert(upo_are_adj(graph, 1, 0) == 0);
     assert(upo_are_adj(graph, 3, 7) == 0);
     assert(upo_is_graph_empty(graph) == 0);
+
     list = upo_get_adj_vert(graph, 0);
-    // assert(list != NULL);
+
+    assert(list != NULL);
+    assert(upo_list_size(list) == 1);
+    assert(*((int*)upo_get(list, 0)) == 1);
+
+    upo_destroy_list(list);
+    upo_add_vertex(graph);
+    upo_add_vertex(graph);
+    upo_add_vertex(graph);
+    upo_add_edge(graph, 4, 0);
+    upo_add_edge(graph, 2, 3);
+    upo_add_edge(graph, 3, 2);
+
+    assert(upo_are_adj(graph, 0, 1) == 1);
+    assert(upo_are_adj(graph, 1, 0) == 0);
+    assert(upo_are_adj(graph, 0, 4) == 1);
+    assert(upo_are_adj(graph, 2, 3) == 1);
+    assert(upo_are_adj(graph, 3, 2) == 1);
+    assert(upo_is_graph_empty(graph) == 0);
+
+    list = upo_get_adj_vert(graph, 2);
+
+    assert(list != NULL);
+    assert(upo_list_size(list) == 1);
+    assert(*((int*)upo_get(list, 0)) == 3);
 
     upo_dirgraph_destroy(graph);
 }
