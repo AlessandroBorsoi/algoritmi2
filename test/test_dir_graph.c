@@ -4,7 +4,7 @@
 static void test_create_destroy();
 static void test_add_remove_vertex();
 static void test_add_remove_edges();
-static void test_degree();
+static void test_vertex_degree();
 
 void test_create_destroy()
 {
@@ -124,7 +124,7 @@ void test_add_remove_edges()
     upo_dirgraph_destroy(graph);
 }
 
-void test_degree()
+void test_vertex_degree()
 {
     upo_dirgraph_t graph = NULL;
 
@@ -186,9 +186,9 @@ int main()
     test_add_remove_edges();
     printf("OK\n");
 
-    printf("Test case 'degree'... ");
+    printf("Test case 'vertex degree'... ");
     fflush(stdout);
-    test_degree();
+    test_vertex_degree();
     printf("OK\n");
 
     return 0;
