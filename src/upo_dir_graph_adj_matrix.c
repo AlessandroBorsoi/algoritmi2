@@ -33,7 +33,7 @@ int upo_dirgraph_destroy(upo_dirgraph_t graph)
         int n = upo_num_vertices(graph);
         if (n > 0)
         {
-            for (int i = 0; i < n; ++i)
+            for (int i = 0; i < n; i++)
                 free(graph->adj[i]);
             free(graph->adj);
         }
@@ -89,8 +89,9 @@ int upo_get_in_degree(upo_dirgraph_t graph, int vertex)
         return -1;
     int n = upo_num_vertices(graph);
     int degree = 0;
-    for (int i = 0; i < n; i++)
-        degree += graph->adj[vertex][i];
+    if (n > 0 && vertex < n)
+        for (int i = 0; i < n; i++)
+            degree += graph->adj[i][vertex];
     return degree;
 }
 
@@ -107,8 +108,9 @@ int upo_get_out_degree(upo_dirgraph_t graph, int vertex)
         return -1;
     int n = upo_num_vertices(graph);
     int degree = 0;
-    for (int i = 0; i < n; i++)
-        degree += graph->adj[i][vertex];
+    if (n > 0 && vertex < n)
+        for (int i = 0; i < n; i++)
+            degree += graph->adj[vertex][i];
     return degree;
 }
 
@@ -337,11 +339,10 @@ int upo_add_edge(upo_dirgraph_t graph, int vertex1, int vertex2)
 {
     if (graph == NULL)
         return -1;
-    if (graph->adj[vertex1][vertex2] == 1)
-        return 0;
-    if (graph->adj[vertex1][vertex2] == 0)
-        graph->adj[vertex1][vertex2] = 1;
-    return 1;
+    int n = upo_num_vertices(graph);
+    if (vertex1 < n && vertex2 < n && graph->adj[vertex1][vertex2] == 0)
+        return graph->adj[vertex1][vertex2] = 1;
+    return 0;
 }
 
 /**
@@ -356,7 +357,10 @@ int upo_has_edge(upo_dirgraph_t graph, int vertex1, int vertex2)
 {
     if (graph == NULL)
         return -1;
-    return graph->adj[vertex1][vertex2];
+    int n = upo_num_vertices(graph);
+    if (vertex1 < n && vertex2 < n)
+        return graph->adj[vertex1][vertex2];
+    return 0;
 }
 
 /**
@@ -371,11 +375,13 @@ int upo_remove_edge(upo_dirgraph_t graph, int vertex1, int vertex2)
 {
     if (graph == NULL)
         return -1;
-    if (graph->adj[vertex1][vertex2] == 0)
-        return 0;
-    if (graph->adj[vertex1][vertex2] == 1)
+    int n = upo_num_vertices(graph);
+    if (vertex1 < n && vertex2 < n && graph->adj[vertex1][vertex2] == 1)
+    {
         graph->adj[vertex1][vertex2] = 0;
-    return 1;
+        return 1;
+    }
+    return 0;
 }
 
 /**

@@ -4,6 +4,7 @@
 static void test_create_destroy();
 static void test_add_remove_vertex();
 static void test_add_remove_edges();
+static void test_degree();
 
 void test_create_destroy()
 {
@@ -57,6 +58,9 @@ void test_add_remove_vertex()
     {
         assert(upo_add_vertex(graph) == 1);
     }
+    assert(upo_has_vertex(graph, 10) == 1);
+    assert(upo_has_vertex(graph, 11) == 0);
+    assert(upo_num_vertices(graph) == 11);
         
     while (upo_num_vertices(graph) > 0)
     {
@@ -120,6 +124,51 @@ void test_add_remove_edges()
     upo_dirgraph_destroy(graph);
 }
 
+void test_degree()
+{
+    upo_dirgraph_t graph = NULL;
+
+    assert(upo_get_in_degree(graph, 0) == -1);
+    assert(upo_get_out_degree(graph, 0) == -1);
+    assert(upo_get_degree(graph, 0) == -1);
+    
+    graph = upo_dirgraph_create();
+    
+    assert(upo_get_in_degree(graph, 0) == 0);
+    assert(upo_get_out_degree(graph, 0) == 0);
+    assert(upo_get_degree(graph, 0) == 0);
+    
+    assert(upo_get_in_degree(graph, 1) == 0);
+    assert(upo_get_out_degree(graph, 1) == 0);
+    assert(upo_get_degree(graph, 1) == 0);
+
+    upo_add_vertex(graph);
+    upo_add_vertex(graph);
+    upo_add_edge(graph, 0, 1);
+    
+    assert(upo_get_in_degree(graph, 0) == 0);
+    assert(upo_get_in_degree(graph, 1) == 1);
+    assert(upo_get_out_degree(graph, 0) == 1);
+    assert(upo_get_out_degree(graph, 1) == 0);
+    assert(upo_get_degree(graph, 0) == 1);
+    assert(upo_get_degree(graph, 1) == 1);
+
+    upo_add_vertex(graph);
+    upo_add_edge(graph, 2, 1);
+
+    assert(upo_get_in_degree(graph, 0) == 0);
+    assert(upo_get_in_degree(graph, 1) == 2);
+    assert(upo_get_in_degree(graph, 2) == 0);
+    assert(upo_get_out_degree(graph, 0) == 1);
+    assert(upo_get_out_degree(graph, 1) == 0);
+    assert(upo_get_out_degree(graph, 2) == 1);
+    assert(upo_get_degree(graph, 0) == 1);
+    assert(upo_get_degree(graph, 1) == 2);
+    assert(upo_get_degree(graph, 2) == 1);
+
+    upo_dirgraph_destroy(graph);
+}
+
 int main()
 {
     printf("Test case 'create/destroy'... ");
@@ -135,6 +184,11 @@ int main()
     printf("Test case 'add/remove edges'... ");
     fflush(stdout);
     test_add_remove_edges();
+    printf("OK\n");
+
+    printf("Test case 'degree'... ");
+    fflush(stdout);
+    test_degree();
     printf("OK\n");
 
     return 0;
@@ -156,6 +210,7 @@ int upo_num_edges(upo_dirgraph_t graph);
 int upo_get_in_degree(upo_dirgraph_t graph, int vertex);
 int upo_get_out_degree(upo_dirgraph_t graph, int vertex);
 int upo_get_degree(upo_dirgraph_t graph, int vertex);
+
 int upo_are_adj(upo_dirgraph_t graph, int vertex1, int vertex2);
 int upo_is_graph_empty(upo_dirgraph_t graph);
 upo_list upo_get_adj_vert(upo_dirgraph_t graph, int vertex);
