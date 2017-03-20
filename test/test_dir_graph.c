@@ -5,6 +5,8 @@ static void test_create_destroy();
 static void test_add_remove_vertex();
 static void test_add_remove_edges();
 static void test_vertex_degree();
+static void test_print_graph();
+static void test_adjacency();
 
 void test_create_destroy()
 {
@@ -169,6 +171,53 @@ void test_vertex_degree()
     upo_dirgraph_destroy(graph);
 }
 
+void test_adjacency()
+{
+    upo_dirgraph_t graph = NULL;
+
+    assert(upo_are_adj(graph, 0, 1) == -1);
+    assert(upo_is_graph_empty(graph) == -1);
+    assert(upo_get_adj_vert(graph, 0) == NULL);
+
+    graph = upo_dirgraph_create();
+
+    assert(upo_are_adj(graph, 0, 1) == 0);
+    assert(upo_is_graph_empty(graph) == 1);
+    upo_list* list = upo_get_adj_vert(graph, 0);
+    // assert(list != NULL);
+
+    upo_add_vertex(graph);
+    upo_add_vertex(graph);
+    upo_add_edge(graph, 0, 1);
+
+    assert(upo_are_adj(graph, 0, 1) == 0);
+    assert(upo_are_adj(graph, 1, 0) == 1);
+    assert(upo_are_adj(graph, 3, 7) == 0);
+    assert(upo_is_graph_empty(graph) == 0);
+    list = upo_get_adj_vert(graph, 0);
+    // assert(list != NULL);
+
+    upo_add_edge(graph, 1, 0);
+    upo_remove_edge(graph, 0, 1);
+
+    assert(upo_are_adj(graph, 0, 1) == 1);
+    assert(upo_are_adj(graph, 1, 0) == 0);
+    assert(upo_are_adj(graph, 3, 7) == 0);
+    assert(upo_is_graph_empty(graph) == 0);
+    list = upo_get_adj_vert(graph, 0);
+    // assert(list != NULL);
+
+    upo_dirgraph_destroy(graph);
+}
+
+void test_print_graph()
+{
+    upo_dirgraph_t graph = NULL;
+    char* graphString = upo_print_graph(graph);
+    printf("%s", graphString);
+    upo_dirgraph_destroy(graph);
+}
+
 int main()
 {
     printf("Test case 'create/destroy'... ");
@@ -189,6 +238,16 @@ int main()
     printf("Test case 'vertex degree'... ");
     fflush(stdout);
     test_vertex_degree();
+    printf("OK\n");
+
+    printf("Test case 'adjacency'... ");
+    fflush(stdout);
+    test_adjacency();
+    printf("OK\n");
+
+    printf("Test case 'print graph'... ");
+    fflush(stdout);
+    test_print_graph();
     printf("OK\n");
 
     return 0;
@@ -214,8 +273,10 @@ int upo_get_degree(upo_dirgraph_t graph, int vertex);
 int upo_are_adj(upo_dirgraph_t graph, int vertex1, int vertex2);
 int upo_is_graph_empty(upo_dirgraph_t graph);
 upo_list upo_get_adj_vert(upo_dirgraph_t graph, int vertex);
+
 upo_list upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex);
 upo_list upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex);
 upo_list upo_get_inc_edg(upo_dirgraph_t graph, int vertex);
+
 char *upo_print_graph(upo_dirgraph_t graph);
 */

@@ -158,7 +158,7 @@ int upo_is_graph_empty(upo_dirgraph_t graph);
  * @param vertex il vertice
  * @return una lista contenente i vertici adiacenti a vertex, NULL se il grafo e' vuoto
  */
-upo_list upo_get_adj_vert(upo_dirgraph_t graph, int vertex);
+upo_list *upo_get_adj_vert(upo_dirgraph_t graph, int vertex);
 
 /**
  * @brief Restituisce una lista contenente gli archi uscenti da vertex
@@ -167,7 +167,7 @@ upo_list upo_get_adj_vert(upo_dirgraph_t graph, int vertex);
  * @param vertex il vertice
  * @return una lista contenente gli archi uscenti da vertex, NULL se il grafo e' vuoto
  */
-upo_list upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex);
+upo_list *upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex);
 
 /**
  * @brief Restituisce una lista contenente gli archi entranti in vertex
@@ -176,7 +176,7 @@ upo_list upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex);
  * @param vertex il vertice
  * @return una lista contenente gli archi archi entranti in vertex, NULL se il grafo e' vuoto
  */
-upo_list upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex);
+upo_list *upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex);
 
 /**
  * @brief Restituisce una lista contenente gli archi incidenti a vertex
@@ -185,7 +185,7 @@ upo_list upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex);
  * @param vertex il vertice
  * @return una lista contenente gli archi incidenti a vertex, NULL se il grafo e' vuoto
  */
-upo_list upo_get_inc_edg(upo_dirgraph_t graph, int vertex);
+upo_list *upo_get_inc_edg(upo_dirgraph_t graph, int vertex);
 
 /**
  * @brief Restituisce una stringa rappresentante il grafo, nella forma Vertice: v;\n v -> i;\n v -> j\n dove i e j sono i vertici adiacenti a v
