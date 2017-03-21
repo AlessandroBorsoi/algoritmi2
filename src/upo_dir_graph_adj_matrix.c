@@ -153,11 +153,11 @@ upo_list *upo_get_adj_vert(upo_dirgraph_t graph, int vertex)
     int n = upo_num_vertices(graph);
     if (n > 0)
     {
-        list = upo_create_list(sizeof(int), NULL);
+        list = upo_create_list(sizeof(int), NULL);      // Si crea una lista di interi
         for (int i = 0; i < n; i++)
         {
-            if (upo_are_adj(graph, vertex, i) == 1)
-            {
+            if (upo_are_adj(graph, vertex, i) == 1)     // Se il vertice è adiacente allora si inserisce
+            {                                           // come ultimo elemento della lista
                 int* element = malloc(sizeof(int));
                 *element = i;
                 upo_add_last(list, element);
@@ -180,10 +180,10 @@ upo_list *upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex)
     int n = upo_num_vertices(graph);
     if (n > 0)
     {
-        list = upo_create_list(sizeof(struct upo_dir_edge_s), NULL);
+        list = upo_create_list(sizeof(struct upo_dir_edge_s), NULL);            // Si crea una lista di edges
         for (int i = 0; i < n; i++)
         {
-            if (graph->adj[vertex][i] == 1)
+            if (graph->adj[vertex][i] == 1)                                     // Se l'arco è uscente lo si aggiunge alla lista
             {
                 upo_dir_edge_t element = malloc(sizeof(struct upo_dir_edge_s));
                 element->from = vertex;
@@ -208,10 +208,10 @@ upo_list *upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex)
     int n = upo_num_vertices(graph);
     if (n > 0)
     {
-        list = upo_create_list(sizeof(struct upo_dir_edge_s), NULL);
+        list = upo_create_list(sizeof(struct upo_dir_edge_s), NULL);            // Si crea una lista di edges
         for (int i = 0; i < n; i++)
         {
-            if (graph->adj[i][vertex] == 1)
+            if (graph->adj[i][vertex] == 1)                                     // Se l'arco è entrante lo si aggiunge alla lista
             {
                 upo_dir_edge_t element = malloc(sizeof(struct upo_dir_edge_s));
                 element->from = i;
@@ -236,19 +236,19 @@ upo_list *upo_get_inc_edg(upo_dirgraph_t graph, int vertex)
     int n = upo_num_vertices(graph);
     if (n > 0)
     {
-        list = upo_create_list(sizeof(struct upo_dir_edge_s), NULL);
+        list = upo_create_list(sizeof(struct upo_dir_edge_s), NULL);            // Si crea una lista di edges
         for (int i = 0; i < n; i++)
         {
-            if (graph->adj[vertex][i] == 1)
+            if (graph->adj[vertex][i] == 1)                                     // Se l'arco è uscente lo si aggiunge alla lista
             {
                 upo_dir_edge_t element = malloc(sizeof(struct upo_dir_edge_s));
                 element->from = vertex;
                 element->to = i;
                 upo_add_last(list, element);
             }
-            if (graph->adj[i][vertex] == 1)
+            if (graph->adj[i][vertex] == 1)                                     // Se l'arco è entrante lo si aggiunge alla lista
             {
-                upo_dir_edge_t element = malloc(sizeof(struct upo_dir_edge_s));
+                upo_dir_edge_t element = malloc(sizeof(struct upo_dir_edge_s)); 
                 element->from = i;
                 element->to = vertex;
                 upo_add_last(list, element);
@@ -391,8 +391,8 @@ int upo_add_edge(upo_dirgraph_t graph, int vertex1, int vertex2)
     if (graph == NULL)
         return -1;
     int n = upo_num_vertices(graph);
-    if (vertex1 < n && vertex2 < n && graph->adj[vertex1][vertex2] == 0)
-    {
+    if (vertex1 < n && vertex2 < n && graph->adj[vertex1][vertex2] == 0)    // Se i vertici esistono e non è presente un arco
+    {                                                                       // allora lo si aggiunge
         graph->adj[vertex1][vertex2] = 1;
         return 1;
     }
@@ -412,8 +412,8 @@ int upo_has_edge(upo_dirgraph_t graph, int vertex1, int vertex2)
     if (graph == NULL)
         return -1;
     int n = upo_num_vertices(graph);
-    if (vertex1 < n && vertex2 < n)
-        return graph->adj[vertex1][vertex2];
+    if (vertex1 < n && vertex2 < n)             // Si controlla che i vertici esistano
+        return graph->adj[vertex1][vertex2];    // e si ritorna 1 o 0
     return 0;
 }
 
@@ -430,8 +430,8 @@ int upo_remove_edge(upo_dirgraph_t graph, int vertex1, int vertex2)
     if (graph == NULL)
         return -1;
     int n = upo_num_vertices(graph);
-    if (vertex1 < n && vertex2 < n && graph->adj[vertex1][vertex2] == 1)
-    {
+    if (vertex1 < n && vertex2 < n && graph->adj[vertex1][vertex2] == 1)    // Viene rimosso l'arco solo se
+    {                                                                       // i vertici esistono e l'arco è presente
         graph->adj[vertex1][vertex2] = 0;
         return 1;
     }
@@ -451,9 +451,9 @@ int upo_are_adj(upo_dirgraph_t graph, int vertex1, int vertex2)
     if (graph == NULL)
         return -1;
     int n = upo_num_vertices(graph);
-    if (vertex1 < n && vertex2 < n)
-        return graph->adj[vertex2][vertex1];
-    return 0;
+    if (vertex1 < n && vertex2 < n)             // Controllo che i vertici richiesti esistano
+        return graph->adj[vertex2][vertex1];    // Per controllare che il vertice 1 sia adiacente al vertice 2
+    return 0;                                   // occorre invertire gli indici
 }
 
 /**
@@ -469,12 +469,12 @@ char *upo_print_graph(upo_dirgraph_t graph)
     if (n > 0)
     {
         int pos = 0;
-        int verticesBytes = sizeof(char) * 15 * n;
-        int edgesBytes = sizeof(char) * 15 * upo_num_edges(graph);
-        string = malloc(verticesBytes + edgesBytes);
+        int verticesBytes = sizeof(char) * 15 * n;                  // Calcolo lo spazio da allocare per la stringa
+        int edgesBytes = sizeof(char) * 15 * upo_num_edges(graph);  // come somma dello spazio che mi serve per i vertici
+        string = malloc(verticesBytes + edgesBytes);                // e per gli archi
         upo_list* list = NULL;
-        for (int i = 0; i < n; i++)
-        {
+        for (int i = 0; i < n; i++)                                 // Per ogni vertice stampo le informazioni richieste
+        {                                                           // tenendo conto della posizione di 'append' nella stringa
             pos+= sprintf(&string[pos], "Vertice: %d;\n", i);
             list = upo_get_inc_out_edg(graph, i);
             for (int j = 0; j < upo_list_size(list); j++)

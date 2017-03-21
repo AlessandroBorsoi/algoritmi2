@@ -136,7 +136,10 @@ void test_add_remove_edges()
     assert(upo_remove_edge(graph, 0, 1) == -1);
 
     graph = upo_dirgraph_create();
-
+    
+    /**
+    * Adj matrix n: 0
+    */
     assert(upo_add_edge(graph, 0, 1) == 0);
     assert(upo_has_edge(graph, 0, 1) == 0);
     assert(upo_num_edges(graph) == 0);
@@ -144,6 +147,9 @@ void test_add_remove_edges()
 
     upo_add_vertex(graph);
 
+    /**
+    * Adj matrix n: 1
+    */
     assert(upo_add_edge(graph, 0, 1) == 0);
     assert(upo_has_edge(graph, 0, 1) == 0);
     assert(upo_num_edges(graph) == 0);
@@ -151,21 +157,47 @@ void test_add_remove_edges()
 
     upo_add_vertex(graph);
     
+    /**
+    * Adj matrix n: 2
+    *   0   1
+    * 0 0   1
+    * 1 0   0
+    */
     assert(upo_add_edge(graph, 0, 1) == 1);
     assert(upo_add_edge(graph, 0, 1) == 0);
     assert(upo_add_edge(graph, 0, 2) == 0);
     assert(upo_has_edge(graph, 0, 1) == 1);
     assert(upo_num_edges(graph) == 1);
+
+    /**
+    * Adj matrix n: 2
+    *   0   1
+    * 0 0   0
+    * 1 0   0
+    */
     assert(upo_remove_edge(graph, 0, 1) == 1);
     assert(upo_remove_edge(graph, 0, 1) == 0);
     assert(upo_has_edge(graph, 0, 1) == 0);
     assert(upo_num_edges(graph) == 0);
 
+    /**
+    * Adj matrix n: 2
+    *   0   1
+    * 0 0   1
+    * 1 1   0
+    */
     assert(upo_add_edge(graph, 0, 1) == 1);
     assert(upo_add_edge(graph, 1, 0) == 1);
     assert(upo_has_edge(graph, 0, 1) == 1);
     assert(upo_has_edge(graph, 1, 0) == 1);
     assert(upo_num_edges(graph) == 2);
+
+    /**
+    * Adj matrix n: 2
+    *   0   1
+    * 0 0   1
+    * 1 0   0
+    */
     assert(upo_remove_edge(graph, 1, 0) == 1);
     assert(upo_has_edge(graph, 1, 0) == 0);
     assert(upo_has_edge(graph, 0, 1) == 1);
@@ -202,6 +234,12 @@ void test_vertex_degree()
     assert(upo_get_out_degree(graph, 1) == 0);
     assert(upo_get_degree(graph, 1) == 0);
 
+    /**
+    * Adj matrix n: 2
+    *   0   1
+    * 0 0   1
+    * 1 0   0
+    */
     upo_add_vertex(graph);
     upo_add_vertex(graph);
     upo_add_edge(graph, 0, 1);
@@ -213,6 +251,13 @@ void test_vertex_degree()
     assert(upo_get_degree(graph, 0) == 1);
     assert(upo_get_degree(graph, 1) == 1);
 
+    /**
+    * Adj matrix n: 3
+    *   0   1   2
+    * 0 0   1   0
+    * 1 0   0   0
+    * 2 0   1   0
+    */
     upo_add_vertex(graph);
     upo_add_edge(graph, 2, 1);
 
@@ -250,6 +295,12 @@ void test_adjacency()
     assert(upo_is_graph_empty(graph) == 1);
     assert(list == NULL);
 
+    /**
+    * Adj matrix n: 2
+    *   0   1
+    * 0 0   1
+    * 1 0   0
+    */
     upo_add_vertex(graph);
     upo_add_vertex(graph);
     upo_add_edge(graph, 0, 1);
@@ -266,6 +317,13 @@ void test_adjacency()
     assert(*((int*)upo_get(list, 0)) == 0);
 
     upo_destroy_list(list);
+
+    /**
+    * Adj matrix n: 2
+    *   0   1
+    * 0 0   0
+    * 1 1   0
+    */
     upo_add_edge(graph, 1, 0);
     upo_remove_edge(graph, 0, 1);
 
@@ -281,6 +339,16 @@ void test_adjacency()
     assert(*((int*)upo_get(list, 0)) == 1);
 
     upo_destroy_list(list);
+
+    /**
+    * Adj matrix n: 5
+    *   0   1   2   3   4
+    * 0 0   0   0   0   0
+    * 1 1   0   0   0   0
+    * 2 0   0   0   1   0
+    * 3 0   0   1   0   0
+    * 4 1   0   0   0   0
+    */
     upo_add_vertex(graph);
     upo_add_vertex(graph);
     upo_add_vertex(graph);
@@ -325,6 +393,15 @@ void test_incidence()
     assert(upo_get_inc_in_edg(graph, 0) == NULL);
     assert(upo_get_inc_edg(graph, 0) == NULL);
     
+    /**
+    * Adj matrix n: 5
+    *   0   1   2   3   4
+    * 0 0   1   1   1   1
+    * 1 0   0   0   0   0
+    * 2 0   0   0   0   0
+    * 3 0   0   0   0   0
+    * 4 0   0   0   0   0
+    */
     upo_add_vertex(graph);
     upo_add_vertex(graph);
     upo_add_vertex(graph);
@@ -411,6 +488,13 @@ void test_print_graph()
 
     assert(string == NULL);
 
+    /**
+    * Adj matrix n: 3
+    *   0   1   2
+    * 0 0   1   1
+    * 1 0   0   1
+    * 2 0   1   0
+    */
     upo_add_vertex(graph);
     upo_add_vertex(graph);
     upo_add_vertex(graph);
