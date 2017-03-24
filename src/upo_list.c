@@ -1,8 +1,8 @@
 #include "upo_list.h"
 
-upo_list *upo_create_list(int elementSize, freeFunction freeFn)
+upo_list_t upo_create_list(int elementSize, freeFunction freeFn)
 {
-    upo_list *list = malloc(sizeof(upo_list));
+    upo_list_t list = malloc(sizeof(struct upo_list_s));
     assert(elementSize > 0);
     list->logicalLength = 0;
     list->elementSize = elementSize;
@@ -11,7 +11,7 @@ upo_list *upo_create_list(int elementSize, freeFunction freeFn)
     return list;
 }
 
-void upo_destroy_list(upo_list *list)
+void upo_destroy_list(upo_list_t list)
 {
     if (list == NULL)
         return;
@@ -32,7 +32,7 @@ void upo_destroy_list(upo_list *list)
     free(list);
 }
 
-void upo_add_first(upo_list *list, void *element)
+void upo_add_first(upo_list_t list, void *element)
 {
     upo_list_node *node = malloc(sizeof(upo_list_node));
     node->element = element;
@@ -49,7 +49,7 @@ void upo_add_first(upo_list *list, void *element)
     list->logicalLength++;
 }
 
-void upo_add_last(upo_list *list, void *element)
+void upo_add_last(upo_list_t list, void *element)
 {
     upo_list_node *node = malloc(sizeof(upo_list_node));
     node->element = element;
@@ -68,7 +68,7 @@ void upo_add_last(upo_list *list, void *element)
     list->logicalLength++;
 }
 
-void *upo_get_first(upo_list *list)
+void *upo_get_first(upo_list_t list)
 {
     assert(list->head != NULL);
 
@@ -76,14 +76,14 @@ void *upo_get_first(upo_list *list)
     return node->element;
 }
 
-void *upo_get_last(upo_list *list)
+void *upo_get_last(upo_list_t list)
 {
     assert(list->tail != NULL);
     upo_list_node *node = list->tail;
     return node->element;
 }
 
-void *upo_get(upo_list *list, int index)
+void *upo_get(upo_list_t list, int index)
 {
     assert(list->tail != NULL);
     upo_list_node *node = list->head;
@@ -95,12 +95,12 @@ void *upo_get(upo_list *list, int index)
     return node->element;
 }
 
-int upo_list_size(upo_list *list)
+int upo_list_size(upo_list_t list)
 {
     return list->logicalLength;
 }
 
-void *upo_remove_first(upo_list *list)
+void *upo_remove_first(upo_list_t list)
 {
     if (list->logicalLength == 0)
         return NULL;
@@ -112,7 +112,7 @@ void *upo_remove_first(upo_list *list)
     return element;
 }
 
-void *upo_remove_last(upo_list *list)
+void *upo_remove_last(upo_list_t list)
 {
     if (list->logicalLength == 0)
         return NULL;
@@ -135,7 +135,7 @@ void *upo_remove_last(upo_list *list)
     return element;
 }
 
-void *upo_remove(upo_list *list, int index)
+void *upo_remove(upo_list_t list, int index)
 {
     if (list->logicalLength == 0 || list->logicalLength <= index)
         return NULL;
@@ -163,7 +163,7 @@ void *upo_remove(upo_list *list, int index)
     return element;
 }
 
-upo_iterator upo_get_list_iterator(upo_list *list)
+upo_iterator upo_get_list_iterator(upo_list_t list)
 {
     return (upo_iterator)list->head;
 }

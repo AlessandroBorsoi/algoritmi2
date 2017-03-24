@@ -278,7 +278,7 @@ void test_vertex_degree()
 * Funzioni testate:
 * int upo_are_adj(upo_dirgraph_t graph, int vertex1, int vertex2);
 * int upo_is_graph_empty(upo_dirgraph_t graph);
-* upo_list upo_get_adj_vert(upo_dirgraph_t graph, int vertex);
+* upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex);
 */
 void test_adjacency()
 {
@@ -286,7 +286,7 @@ void test_adjacency()
 
     assert(upo_are_adj(graph, 0, 1) == -1);
     assert(upo_is_graph_empty(graph) == -1);
-    upo_list* list = upo_get_adj_vert(graph, 0);
+    upo_list_t list = upo_get_adj_vert(graph, 0);
     assert(list == NULL);
 
     graph = upo_dirgraph_create();
@@ -375,9 +375,9 @@ void test_adjacency()
 
 /**
 * Funzioni testate:
-* upo_list upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex);
-* upo_list upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex);
-* upo_list upo_get_inc_edg(upo_dirgraph_t graph, int vertex);
+* upo_list_t upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex);
+* upo_list_t upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex);
+* upo_list_t upo_get_inc_edg(upo_dirgraph_t graph, int vertex);
 */
 void test_incidence()
 {
@@ -412,7 +412,7 @@ void test_incidence()
     upo_add_edge(graph, 0, 3);
     upo_add_edge(graph, 0, 4);
 
-    upo_list* list = upo_get_inc_out_edg(graph, 0);
+    upo_list_t list = upo_get_inc_out_edg(graph, 0);
 
     assert(list != NULL);
     assert(upo_list_size(list) == 4);
@@ -549,31 +549,3 @@ int main()
 
     return 0;
 }
-/*
-upo_dirgraph_t upo_dirgraph_create();
-int upo_dirgraph_destroy(upo_dirgraph_t graph);
-
-int upo_num_vertices(upo_dirgraph_t graph);
-int upo_add_vertex(upo_dirgraph_t graph);
-int upo_has_vertex(upo_dirgraph_t graph, int vertex);
-int upo_remove_vertex(upo_dirgraph_t graph, int vertex);
-
-int upo_add_edge(upo_dirgraph_t graph, int vertex1, int vertex2);
-int upo_has_edge(upo_dirgraph_t graph, int vertex1, int vertex2);
-int upo_remove_edge(upo_dirgraph_t graph, int vertex1, int vertex2);
-int upo_num_edges(upo_dirgraph_t graph);
-
-int upo_get_in_degree(upo_dirgraph_t graph, int vertex);
-int upo_get_out_degree(upo_dirgraph_t graph, int vertex);
-int upo_get_degree(upo_dirgraph_t graph, int vertex);
-
-int upo_are_adj(upo_dirgraph_t graph, int vertex1, int vertex2);
-int upo_is_graph_empty(upo_dirgraph_t graph);
-upo_list upo_get_adj_vert(upo_dirgraph_t graph, int vertex);
-
-upo_list upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex);
-upo_list upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex);
-upo_list upo_get_inc_edg(upo_dirgraph_t graph, int vertex);
-
-char *upo_print_graph(upo_dirgraph_t graph);
-*/

@@ -147,9 +147,9 @@ int upo_is_graph_empty(upo_dirgraph_t graph)
  * @param vertex il vertice
  * @return una lista contenente i vertici adiacenti a vertex, NULL se il grafo e' vuoto
  */
-upo_list *upo_get_adj_vert(upo_dirgraph_t graph, int vertex)
+upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex)
 {
-    upo_list* list = NULL;
+    upo_list_t list = NULL;
     int n = upo_num_vertices(graph);
     if (n > 0)
     {
@@ -174,9 +174,9 @@ upo_list *upo_get_adj_vert(upo_dirgraph_t graph, int vertex)
  * @param vertex il vertice
  * @return una lista contenente gli archi uscenti da vertex, NULL se il grafo e' vuoto
  */
-upo_list *upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex)
+upo_list_t upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex)
 {
-    upo_list* list = NULL;
+    upo_list_t list = NULL;
     int n = upo_num_vertices(graph);
     if (n > 0)
     {
@@ -202,9 +202,9 @@ upo_list *upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex)
  * @param vertex il vertice
  * @return una lista contenente gli archi archi entranti in vertex, NULL se il grafo e' vuoto
  */
-upo_list *upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex)
+upo_list_t upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex)
 {
-    upo_list* list = NULL;
+    upo_list_t list = NULL;
     int n = upo_num_vertices(graph);
     if (n > 0)
     {
@@ -230,9 +230,9 @@ upo_list *upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex)
  * @param vertex il vertice
  * @return una lista contenente gli archi incidenti a vertex, NULL se il grafo e' vuoto
  */
-upo_list *upo_get_inc_edg(upo_dirgraph_t graph, int vertex)
+upo_list_t upo_get_inc_edg(upo_dirgraph_t graph, int vertex)
 {
-    upo_list* list = NULL;
+    upo_list_t list = NULL;
     int n = upo_num_vertices(graph);
     if (n > 0)
     {
@@ -472,7 +472,7 @@ char *upo_print_graph(upo_dirgraph_t graph)
         int verticesBytes = sizeof(char) * 15 * n;                  // Calcolo lo spazio da allocare per la stringa
         int edgesBytes = sizeof(char) * 15 * upo_num_edges(graph);  // come somma dello spazio che mi serve per i vertici
         string = malloc(verticesBytes + edgesBytes);                // e per gli archi
-        upo_list* list = NULL;
+        upo_list_t list = NULL;
         for (int i = 0; i < n; i++)                                 // Per ogni vertice stampo le informazioni richieste
         {                                                           // tenendo conto della posizione di 'append' nella stringa
             pos+= sprintf(&string[pos], "Vertice: %d;\n", i);
