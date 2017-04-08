@@ -1,1 +1,1 @@
-### Esercizi pratici del corso di Algoritmi 2 della facoltà di informatica dell'Università del Piemonte Orientale
+### Esercizi pratici del corso di Algoritmi 2 della facoltà di Informatica dell'Università del Piemonte Orientale
