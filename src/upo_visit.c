@@ -1,4 +1,5 @@
-#include "upo_visit.h"
+#include <upo_visit.h>
+#include <upo_queue.h>
 
 #define WHITE 0
 #define GRAY 1
@@ -17,18 +18,40 @@ int* upo_BFS(upo_dirgraph_t graph, int source)
     if (graph == NULL)
         return NULL;
     int n = upo_num_vertices(graph);
-    if (n > 0)
+    if (n < 1)
+        return NULL;    
+    upo_queue_t queue = upo_queue_create();
+    int* parentVector = malloc(sizeof(int) * n);
+    int color[n];
+    for (int i = 0; i < n; i++)
     {
-        int* parentVector = malloc(sizeof(int) * n);
-        int color[n];
-        color[source] = GRAY;
-
-
-
-        return parentVector;
+        parentVector[i] = -1;
+        color[i] = 0;
     }
-    else
-        return NULL;
+    color[source] = GRAY;
+    upo_queue_enqueue(queue, &source);
+    while (upo_queue_is_empty(queue) == 0) {
+        int u = *((int*)upo_queue_peek(queue));
+        upo_list_t list = upo_get_inc_out_edg(graph, u);
+        upo_iterator iterator = upo_get_list_iterator(list);
+        while (iterator != NULL)
+        {
+            upo_dir_edge_t edge = (upo_dir_edge_t)upo_get_iterator_element(iterator);
+            int v = edge->to;
+            if (color[v] == WHITE)
+            {
+                color[v] = GRAY;
+                parentVector[v] = u;
+                upo_queue_enqueue(queue, &v);
+            }
+            iterator = upo_get_next(iterator);
+        }
+        color[u] = BLACK;
+        upo_queue_dequeue(queue, 0);
+        upo_destroy_list(list);
+    }
+    upo_queue_destroy(queue, 0);
+    return parentVector;
 }
 
 /**

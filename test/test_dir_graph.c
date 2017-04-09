@@ -546,7 +546,7 @@ void test_BFS()
     /**
     * Parent vector
     *
-    *   0[ ]
+    *   0[-1]
     *   1[5]
     *   2[0]
     *   3[5]
@@ -556,8 +556,11 @@ void test_BFS()
     *   7[4]
     *           
     */
+    printf("\n");
+    for (int i = 0; i < 8; i++)
+        printf("vector[%d] = %d\n", i, vector[i]);
     assert(vector != NULL);
-    assert(vector[0] == 0);
+    assert(vector[0] == -1);
     assert(vector[1] == 5);
     assert(vector[2] == 0);
     assert(vector[3] == 5);
