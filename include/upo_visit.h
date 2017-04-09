@@ -1,4 +1,3 @@
-
 #ifndef UPO_VISIT_H
 #define UPO_VISIT_H
 

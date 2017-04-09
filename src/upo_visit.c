@@ -1,5 +1,9 @@
 #include "upo_visit.h"
 
+#define WHITE 0
+#define GRAY 1
+#define BLACK 2
+
 /**
  * @brief Effettua una visita in ampiezza BFS semplice di un grafo graph a partire da un vertice sorgente source
  *
@@ -8,9 +12,23 @@
  * @return il vettore dei padri dell'albero di visita, NULL se il grafo e' vuoto.
  *
  */
-int* upo_BFS(upo_dirgraph_t graph, int source) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+int* upo_BFS(upo_dirgraph_t graph, int source) 
+{
+    if (graph == NULL)
+        return NULL;
+    int n = upo_num_vertices(graph);
+    if (n > 0)
+    {
+        int* parentVector = malloc(sizeof(int) * n);
+        int color[n];
+        color[source] = GRAY;
+
+
+
+        return parentVector;
+    }
+    else
+        return NULL;
 }
 
 /**

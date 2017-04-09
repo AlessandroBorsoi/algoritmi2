@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <upo_dir_graph.h>
+#include <upo_visit.h>
 
 static void test_create_destroy();
 static void test_add_remove_vertex();
@@ -8,6 +9,7 @@ static void test_vertex_degree();
 static void test_adjacency();
 static void test_incidence();
 static void test_print_graph();
+static void test_BFS();
 
 /**
 * Funzioni testate:
@@ -510,6 +512,64 @@ void test_print_graph()
     upo_dirgraph_destroy(graph);
 }
 
+void test_BFS()
+{
+    // https://www.youtube.com/watch?v=Zlk2FX-8RYs
+    upo_dirgraph_t graph = NULL;
+
+    assert(upo_BFS(graph, 0) == NULL);
+
+    graph = upo_dirgraph_create();
+
+    assert(upo_BFS(graph, 0) == NULL);
+
+    for (int i = 0; i < 8; i++)
+        upo_add_vertex(graph);
+    upo_add_edge(graph, 0, 2);
+    upo_add_edge(graph, 1, 6);
+    upo_add_edge(graph, 2, 4);
+    upo_add_edge(graph, 2, 5);
+    upo_add_edge(graph, 3, 1);
+    upo_add_edge(graph, 3, 5);
+    upo_add_edge(graph, 3, 7);
+    upo_add_edge(graph, 4, 6);
+    upo_add_edge(graph, 4, 7);
+    upo_add_edge(graph, 5, 1);
+    upo_add_edge(graph, 5, 3);
+    upo_add_edge(graph, 5, 6);
+    upo_add_edge(graph, 5, 7);
+    upo_add_edge(graph, 6, 5);
+    upo_add_edge(graph, 7, 5);
+
+    int* vector = upo_BFS(graph, 0);
+
+    /**
+    * Parent vector
+    *
+    *   0[ ]
+    *   1[5]
+    *   2[0]
+    *   3[5]
+    *   4[2]
+    *   5[2]
+    *   6[4]
+    *   7[4]
+    *           
+    */
+    assert(vector != NULL);
+    assert(vector[0] == 0);
+    assert(vector[1] == 5);
+    assert(vector[2] == 0);
+    assert(vector[3] == 5);
+    assert(vector[4] == 2);
+    assert(vector[5] == 2);
+    assert(vector[6] == 4);
+    assert(vector[7] == 4);
+
+    free(vector);
+    upo_dirgraph_destroy(graph);
+}
+
 int main()
 {
     printf("Test case 'create/destroy'... ");
@@ -545,6 +605,11 @@ int main()
     printf("Test case 'print graph'... ");
     fflush(stdout);
     test_print_graph();
+    printf("OK\n");
+
+    printf("Test case 'BFS'... ");
+    fflush(stdout);
+    test_BFS();
     printf("OK\n");
 
     return 0;
