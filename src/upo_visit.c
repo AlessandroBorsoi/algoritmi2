@@ -5,6 +5,8 @@
 #define GRAY 1
 #define BLACK 2
 
+void upo_DFS_tot_ric(upo_dirgraph_t graph, int u, int n, int* color, int* parentVector);
+
 /**
  * @brief Effettua una visita in ampiezza BFS semplice di un grafo graph a partire da un vertice sorgente source
  *
@@ -67,9 +69,46 @@ int* upo_BFS(upo_dirgraph_t graph, int source)
  * @return il vettore dei padri della foresta di visita, NULL se il grafo e' vuoto.
  *
  */
-int* upo_DFS_tot(upo_dirgraph_t graph) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+int* upo_DFS_tot(upo_dirgraph_t graph) 
+{
+    if (graph == NULL)                                          // Se il grafo è NULL o non ci sono vertici viene tornato NULL
+        return NULL;
+    int n = upo_num_vertices(graph);
+    if (n < 1)
+        return NULL;    
+    int* parentVector = malloc(sizeof(int) * n); 
+    int color[n];                                
+    for (int i = 0; i < n; i++)
+    {
+        parentVector[i] = -1;                                   // Si inizializzano gli array parent e color a -1
+        color[i] = WHITE;                                       // e WHITE rispettivamente
+    }
+    for (int i = 0; i < n; i++)
+    {
+        if (color[i] == WHITE)
+            upo_DFS_tot_ric(graph, i, n, color, parentVector);
+    }
+    return parentVector;
+}
+
+void upo_DFS_tot_ric(upo_dirgraph_t graph, int u, int n, int* color, int* parentVector)
+{
+    color[u] = GRAY;
+    upo_list_t list = upo_get_inc_out_edg(graph, u);
+    upo_iterator iterator = upo_get_list_iterator(list);
+    while (iterator != NULL)
+    {
+        upo_dir_edge_t edge = (upo_dir_edge_t)upo_get_iterator_element(iterator);
+        int* v = malloc(sizeof(int));
+        *v = edge->to;
+        if (color[*v] == WHITE)
+        {
+            parentVector[*v] = u;
+            upo_DFS_tot_ric(graph, *v, n, color, parentVector);
+        }
+        iterator = upo_get_next(iterator);
+    }
+    color[u] = BLACK;
 }
 
 /**
