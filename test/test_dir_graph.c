@@ -512,9 +512,11 @@ void test_print_graph()
     upo_dirgraph_destroy(graph);
 }
 
+/**
+* Caso di test illustrato qui: https://www.youtube.com/watch?v=Zlk2FX-8RYs
+*/
 void test_BFS()
 {
-    // https://www.youtube.com/watch?v=Zlk2FX-8RYs
     upo_dirgraph_t graph = NULL;
 
     assert(upo_BFS(graph, 0) == NULL);
@@ -556,9 +558,6 @@ void test_BFS()
     *   7[4]
     *           
     */
-    printf("\n");
-    for (int i = 0; i < 8; i++)
-        printf("vector[%d] = %d\n", i, vector[i]);
     assert(vector != NULL);
     assert(vector[0] == -1);
     assert(vector[1] == 5);

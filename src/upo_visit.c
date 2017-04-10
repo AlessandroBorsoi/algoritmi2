@@ -15,43 +15,48 @@
  */
 int* upo_BFS(upo_dirgraph_t graph, int source) 
 {
-    if (graph == NULL)
+    if (graph == NULL)                                          // Se il grafo è NULL o non ci sono vertici viene tornato NULL
         return NULL;
     int n = upo_num_vertices(graph);
     if (n < 1)
         return NULL;    
-    upo_queue_t queue = upo_queue_create();
-    int* parentVector = malloc(sizeof(int) * n);
-    int color[n];
+    upo_queue_t queue = upo_queue_create();                     // Si instanzia la coda per gestire l'ordine di visita
+    int* parentVector = malloc(sizeof(int) * n);                // Si istanzia la memoria per l'array dei padri da ritornare
+    int color[n];                                   
     for (int i = 0; i < n; i++)
     {
-        parentVector[i] = -1;
-        color[i] = 0;
+        parentVector[i] = -1;                                   // Si inizializzano gli array parent e color a -1
+        color[i] = WHITE;                                       // e WHITE rispettivamente
     }
-    color[source] = GRAY;
-    upo_queue_enqueue(queue, &source);
-    while (upo_queue_is_empty(queue) == 0) {
-        int u = *((int*)upo_queue_peek(queue));
-        upo_list_t list = upo_get_inc_out_edg(graph, u);
+    color[source] = GRAY;                                       // Il primo elemento, segnato a GRAY viene passato alla coda
+    int* s = malloc(sizeof(int));
+    *s = source;
+    upo_queue_enqueue(queue, s);                    
+    while (upo_queue_is_empty(queue) == 0) {                    // Finchè ci sono elementi nella coda...
+        int u = *((int*)upo_queue_peek(queue));                 // Viene preso il primo elemento della coda u
+        upo_list_t list = upo_get_inc_out_edg(graph, u);        // Viene estratta la lista di tutti i vertici uscenti d u
         upo_iterator iterator = upo_get_list_iterator(list);
-        while (iterator != NULL)
+        while (iterator != NULL)                                // Vengono iterati tutti i vertici incidenti
         {
-            upo_dir_edge_t edge = (upo_dir_edge_t)upo_get_iterator_element(iterator);
-            int v = edge->to;
-            if (color[v] == WHITE)
+            upo_dir_edge_t edge = (upo_dir_edge_t)upo_get_iterator_element(iterator);   // Si estrae il primo vertice
+            int* v = malloc(sizeof(int));
+            *v = edge->to;
+            if (color[*v] == WHITE)                             // Se non è mai stato visitato
             {
-                color[v] = GRAY;
-                parentVector[v] = u;
-                upo_queue_enqueue(queue, &v);
+                color[*v] = GRAY;                               // Lo si visita cambiandone lo stato in GRAY
+                parentVector[*v] = u;                           // Si assegna il nodo da cui si è arrivati
+                upo_queue_enqueue(queue, v);                    // Si aggiunge il vertice alla coda
             }
             iterator = upo_get_next(iterator);
         }
-        color[u] = BLACK;
+        color[u] = BLACK;                                       // Una volta iterati tutti i vertici incidenti, il vertice diventa BLACK
+        int* deletingVertex = (int*)upo_queue_peek(queue);      // Viene assegnato il puntatore al vertice che verrà tolto dalla coda
         upo_queue_dequeue(queue, 0);
-        upo_destroy_list(list);
+        free(deletingVertex);                                   // per poterne liberare la memoria
+        upo_destroy_list(list);                                 // La lista di vertici incidenti non è più necessaria
     }
-    upo_queue_destroy(queue, 0);
-    return parentVector;
+    upo_queue_destroy(queue, 0);                                // La coda viene distrutta
+    return parentVector;                                        // e il vettore dei padri ritornato.
 }
 
 /**
