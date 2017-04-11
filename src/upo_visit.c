@@ -41,10 +41,10 @@ int* upo_BFS(upo_dirgraph_t graph, int source)
         while (iterator != NULL)                                // Vengono iterati tutti i vertici incidenti
         {
             upo_dir_edge_t edge = (upo_dir_edge_t)upo_get_iterator_element(iterator);   // Si estrae il primo vertice
-            int* v = malloc(sizeof(int));
-            *v = edge->to;
-            if (color[*v] == WHITE)                             // Se non è mai stato visitato
+            if (color[edge->to] == WHITE)                       // Se non è mai stato visitato
             {
+                int* v = malloc(sizeof(int));
+                *v = edge->to;
                 color[*v] = GRAY;                               // Lo si visita cambiandone lo stato in GRAY
                 parentVector[*v] = u;                           // Si assegna il nodo da cui si è arrivati
                 upo_queue_enqueue(queue, v);                    // Si aggiunge il vertice alla coda
