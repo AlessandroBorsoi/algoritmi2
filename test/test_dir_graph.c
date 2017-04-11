@@ -573,6 +573,9 @@ void test_BFS()
     upo_dirgraph_destroy(graph);
 }
 
+/**
+* Caso di test illustrato qui: https://www.youtube.com/watch?v=CZc_hdTYGKc
+*/
 void test_DFS_tot()
 {
     upo_dirgraph_t graph = NULL;
@@ -586,25 +589,30 @@ void test_DFS_tot()
     for (int i = 0; i < 8; i++)
         upo_add_vertex(graph);
     upo_add_edge(graph, 0, 2);
+    upo_add_edge(graph, 1, 3);
+    upo_add_edge(graph, 1, 5);
     upo_add_edge(graph, 1, 6);
+    upo_add_edge(graph, 2, 0);
     upo_add_edge(graph, 2, 4);
-    upo_add_edge(graph, 2, 5);
-    upo_add_edge(graph, 3, 1);
+    upo_add_edge(graph, 2, 6);
     upo_add_edge(graph, 3, 5);
     upo_add_edge(graph, 3, 7);
-    upo_add_edge(graph, 4, 6);
-    upo_add_edge(graph, 4, 7);
-    upo_add_edge(graph, 5, 1);
+    upo_add_edge(graph, 4, 2);
     upo_add_edge(graph, 5, 3);
-    upo_add_edge(graph, 5, 6);
-    upo_add_edge(graph, 5, 7);
+    upo_add_edge(graph, 6, 2);
     upo_add_edge(graph, 6, 5);
-    upo_add_edge(graph, 7, 5);
 
     int* vector = upo_DFS_tot(graph);
 
-    for (int i = 0; i < 8; i++)
-        printf("vector[%d] = %d\n", i, vector[i]);
+    assert(vector != NULL);
+    assert(vector[0] == -1);
+    assert(vector[1] == -1);
+    assert(vector[2] == 0);
+    assert(vector[3] == 5);
+    assert(vector[4] == 2);
+    assert(vector[5] == 6);
+    assert(vector[6] == 2);
+    assert(vector[7] == 3);
 
     free(vector);
     upo_dirgraph_destroy(graph);
