@@ -99,16 +99,16 @@ void upo_DFS_tot_ric(upo_dirgraph_t graph, int u, int n, int* color, int* parent
     while (iterator != NULL)
     {
         upo_dir_edge_t edge = (upo_dir_edge_t)upo_get_iterator_element(iterator);
-        int* v = malloc(sizeof(int));
-        *v = edge->to;
-        if (color[*v] == WHITE)
+        int v = edge->to;
+        if (color[v] == WHITE)
         {
-            parentVector[*v] = u;
-            upo_DFS_tot_ric(graph, *v, n, color, parentVector);
+            parentVector[v] = u;
+            upo_DFS_tot_ric(graph, v, n, color, parentVector);
         }
         iterator = upo_get_next(iterator);
     }
     color[u] = BLACK;
+    upo_destroy_list(list);
 }
 
 /**
