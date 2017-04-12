@@ -6,6 +6,7 @@
 #define BLACK 2
 
 void upo_DFS_tot_ric(upo_dirgraph_t graph, int u, int n, int* color, int* parentVector);
+int upo_cyclic_ric(upo_dirgraph_t graph, int u, int* color);
 
 /**
  * @brief Effettua una visita in ampiezza BFS semplice di un grafo graph a partire da un vertice sorgente source
@@ -116,10 +117,50 @@ void upo_DFS_tot_ric(upo_dirgraph_t graph, int u, int n, int* color, int* parent
  * @return 1 se il grafo contiene cicli, 0 se e' aciclico, -1 se il grafo e' nullo
  *
  */
-int upo_cyclic(upo_dirgraph_t graph) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+int upo_cyclic(upo_dirgraph_t graph) 
+{
+    if (graph == NULL)                                                  // Se il grafo è NULL o non ci sono vertici viene tornato -1
+        return -1;
+    int n = upo_num_vertices(graph);
+    if (n < 1)
+        return -1;    
+    int color[n];
+    for (int i = 0; i < n; i++)
+        color[i] = WHITE;                                               // Inizializzazione del vettore color
+    for (int i = 0; i < n; i++)
+        if (color[i] == WHITE && upo_cyclic_ric(graph, i, color) == 1)  // Se il vertice è inesplorato viene chiamata la funzione ricorsiva
+            return 1;
+    return 0;
 }
+
+int upo_cyclic_ric(upo_dirgraph_t graph, int u, int* color)
+{
+    color[u] = GRAY;
+    upo_list_t list = upo_get_inc_out_edg(graph, u);
+    upo_iterator iterator = upo_get_list_iterator(list);
+    while (iterator != NULL)
+    {
+        upo_dir_edge_t edge = (upo_dir_edge_t)upo_get_iterator_element(iterator);
+        int v = edge->to;                                   
+        if (color[v] == WHITE)
+        {
+            if (upo_cyclic_ric(graph, v, color) == 1)
+            {
+                upo_destroy_list(list);
+                return 1;
+            }
+        }
+        else if (color[v] == GRAY)
+        {
+            upo_destroy_list(list);
+            return 1;
+        }
+        iterator = upo_get_next(iterator);
+    }
+    color[u] = BLACK;
+    upo_destroy_list(list);
+    return 0;
+} 
 
 /**
  * @brief Controlla se un grafo graph e' un DAG (partendo dall'assunzione che sia diretto)
@@ -128,9 +169,12 @@ int upo_cyclic(upo_dirgraph_t graph) {
  * @return 1 se il grafo e' un DAG, 0 se non lo e', -1 se il grafo e' nullo
  *
  */
-int upo_is_DAG(upo_dirgraph_t graph) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+int upo_is_DAG(upo_dirgraph_t graph) 
+{
+    int res = upo_cyclic(graph);    // Si controlla se il grafo contiene cicli
+    if (res == -1)      
+        return -1;                  // Se il grafo è NULL o non ha vertici si ritorna -1
+    return 1 - res;                 // Se non contiene cicli si ritorna 1 e viceversa
 }
 
 /**

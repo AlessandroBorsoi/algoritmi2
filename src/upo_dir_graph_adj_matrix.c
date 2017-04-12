@@ -6,7 +6,7 @@
  * @return un nuovo grafo diretto vuoto
  *
  */
-upo_dirgraph_t upo_dirgraph_create(int n)
+upo_dirgraph_t upo_dirgraph_create()
 {
     upo_dirgraph_t graph = malloc(sizeof(struct upo_dirgraph_s));
     if (graph == NULL)
@@ -15,7 +15,7 @@ upo_dirgraph_t upo_dirgraph_create(int n)
         abort();
     }
     graph->adj = NULL;
-    graph->n = n;
+    graph->n = 0;
     return graph;
 }
 

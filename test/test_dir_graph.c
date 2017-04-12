@@ -11,6 +11,7 @@ static void test_incidence();
 static void test_print_graph();
 static void test_BFS();
 static void test_DFS_tot();
+static void test_cyclic_DAG();
 
 /**
 * Funzioni testate:
@@ -618,6 +619,65 @@ void test_DFS_tot()
     upo_dirgraph_destroy(graph);
 }
 
+void test_cyclic_DAG()
+{
+    upo_dirgraph_t cyclic_graph = NULL;
+
+    assert(upo_cyclic(cyclic_graph) == -1);
+    assert(upo_is_DAG(cyclic_graph) == -1);
+
+    cyclic_graph = upo_dirgraph_create();
+
+    assert(upo_cyclic(cyclic_graph) == -1);
+    assert(upo_is_DAG(cyclic_graph) == -1);
+
+    // Test case: https://www.youtube.com/watch?v=Zlk2FX-8RYs
+    for (int i = 0; i < 8; i++)
+        upo_add_vertex(cyclic_graph);
+    upo_add_edge(cyclic_graph, 0, 2);
+    upo_add_edge(cyclic_graph, 1, 6);
+    upo_add_edge(cyclic_graph, 2, 4);
+    upo_add_edge(cyclic_graph, 2, 5);
+    upo_add_edge(cyclic_graph, 3, 1);
+    upo_add_edge(cyclic_graph, 3, 5);
+    upo_add_edge(cyclic_graph, 3, 7);
+    upo_add_edge(cyclic_graph, 4, 6);
+    upo_add_edge(cyclic_graph, 4, 7);
+    upo_add_edge(cyclic_graph, 5, 1);
+    upo_add_edge(cyclic_graph, 5, 3);
+    upo_add_edge(cyclic_graph, 5, 6);
+    upo_add_edge(cyclic_graph, 5, 7);
+    upo_add_edge(cyclic_graph, 6, 5);
+    upo_add_edge(cyclic_graph, 7, 5);
+
+    assert(upo_cyclic(cyclic_graph) == 1);
+    assert(upo_is_DAG(cyclic_graph) == 0);
+
+    upo_dirgraph_destroy(cyclic_graph);
+
+    upo_dirgraph_t acyclic_graph = upo_dirgraph_create();
+
+    assert(upo_cyclic(acyclic_graph) == -1);
+    assert(upo_is_DAG(acyclic_graph) == -1);
+
+    // Test case: https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Directed_acyclic_graph.svg/800px-Directed_acyclic_graph.svg.png
+    for (int i = 0; i < 8; i++)
+        upo_add_vertex(acyclic_graph);
+    upo_add_edge(acyclic_graph, 1, 2);
+    upo_add_edge(acyclic_graph, 2, 3);
+    upo_add_edge(acyclic_graph, 2, 4);
+    upo_add_edge(acyclic_graph, 2, 5);
+    upo_add_edge(acyclic_graph, 3, 5);
+    upo_add_edge(acyclic_graph, 4, 5);
+    upo_add_edge(acyclic_graph, 5, 6);
+    upo_add_edge(acyclic_graph, 4, 7);
+
+    assert(upo_cyclic(acyclic_graph) == 0);
+    assert(upo_is_DAG(acyclic_graph) == 1);
+
+    upo_dirgraph_destroy(acyclic_graph);
+}
+
 int main()
 {
     printf("Test case 'create/destroy'... ");
@@ -663,6 +723,11 @@ int main()
     printf("Test case 'DFS total'... ");
     fflush(stdout);
     test_DFS_tot();
+    printf("OK\n");
+
+    printf("Test case 'cyclic/DAG'... ");
+    fflush(stdout);
+    test_cyclic_DAG();
     printf("OK\n");
 
     return 0;
