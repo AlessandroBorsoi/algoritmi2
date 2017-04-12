@@ -7,6 +7,7 @@
 
 void upo_DFS_tot_ric(upo_dirgraph_t graph, int u, int n, int* color, int* parentVector);
 int upo_cyclic_ric(upo_dirgraph_t graph, int u, int* color);
+void upo_topological_sort_ric(upo_dirgraph_t graph, int u, int n, int* color, int* ts, int* t);
 
 /**
  * @brief Effettua una visita in ampiezza BFS semplice di un grafo graph a partire da un vertice sorgente source
@@ -83,10 +84,8 @@ int* upo_DFS_tot(upo_dirgraph_t graph)
         color[i] = WHITE;                                       // e WHITE rispettivamente
     }
     for (int i = 0; i < n; i++)                                 // Per ogni nodo
-    {
         if (color[i] == WHITE)                                  // bianco
             upo_DFS_tot_ric(graph, i, n, color, parentVector);  // si richiama la funzione ricorsiva
-    }
     return parentVector;
 }
 
@@ -184,9 +183,41 @@ int upo_is_DAG(upo_dirgraph_t graph)
  * @return il vettore ord dell'ordinamento topologico di graph
  *
  */
-int* upo_topological_sort(upo_dirgraph_t graph) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+int* upo_topological_sort(upo_dirgraph_t graph) 
+{
+    if (upo_is_DAG(graph) < 1)                                  // Se il grafo non è un DAG, è NULL o non ha vertici
+        return NULL;                                            // si ritorna NULL
+    int n = upo_num_vertices(graph);
+    int* ts = calloc(sizeof(int), n);
+    int* t = malloc(sizeof(int));
+    *t = n - 1;
+    int color[n];                                
+    for (int i = 0; i < n; i++)
+        color[i] = WHITE;                                       
+    for (int i = 0; i < n; i++)                                 // Per ogni nodo
+        if (color[i] == WHITE)                                  // bianco
+            upo_topological_sort_ric(graph, i, n, color, ts, t);// si richiama la funzione ricorsiva
+    free(t);
+    return ts;
+}
+
+void upo_topological_sort_ric(upo_dirgraph_t graph, int u, int n, int* color, int* ts, int* t)
+{
+    color[u] = GRAY;                                            // Il nodo appena visitato viene settato a GREY
+    upo_list_t list = upo_get_inc_out_edg(graph, u);
+    upo_iterator iterator = upo_get_list_iterator(list);
+    while (iterator != NULL)                                    // Si itera su tutti i nodi con vertice uscente da u
+    {
+        upo_dir_edge_t edge = (upo_dir_edge_t)upo_get_iterator_element(iterator);
+        int v = edge->to;                                   
+        if (color[v] == WHITE)                                  // Se il vertice considerato è WHITE
+            upo_topological_sort_ric(graph, v, n, color, ts, t);// si chiama di nuovo la funzione ricorsiva
+        iterator = upo_get_next(iterator);
+    }
+    color[u] = BLACK;                                           // Al ritorno della ricorsione si può settare il nodo a BLACK
+    upo_destroy_list(list);
+    ts[*t] = u;
+    (*t)--;
 }
 
 /**

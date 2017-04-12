@@ -12,6 +12,7 @@ static void test_print_graph();
 static void test_BFS();
 static void test_DFS_tot();
 static void test_cyclic_DAG();
+static void test_topological_sort();
 
 /**
 * Funzioni testate:
@@ -678,6 +679,78 @@ void test_cyclic_DAG()
     upo_dirgraph_destroy(acyclic_graph);
 }
 
+void test_topological_sort()
+{
+    upo_dirgraph_t graph = NULL;
+
+    assert(upo_topological_sort(graph) == NULL);
+
+    graph = upo_dirgraph_create();
+
+    assert(upo_topological_sort(graph) == NULL);
+
+    // Test case: https://www.youtube.com/watch?v=fS3Ljm_gVN4
+    for (int i = 0; i < 8; i++)
+        upo_add_vertex(graph);
+    upo_add_edge(graph, 0, 1);
+    upo_add_edge(graph, 0, 2);
+    upo_add_edge(graph, 0, 3);
+    upo_add_edge(graph, 1, 2);
+    upo_add_edge(graph, 1, 3);
+    upo_add_edge(graph, 1, 5);
+    upo_add_edge(graph, 1, 6);
+    upo_add_edge(graph, 2, 5);
+    upo_add_edge(graph, 3, 5);
+    upo_add_edge(graph, 4, 7);
+    upo_add_edge(graph, 5, 6);
+
+    int* ts = upo_topological_sort(graph);
+
+    assert(ts != NULL);
+    assert(ts[0] == 4);
+    assert(ts[1] == 7);
+    assert(ts[2] == 0);
+    assert(ts[3] == 1);
+    assert(ts[4] == 3);
+    assert(ts[5] == 2);
+    assert(ts[6] == 5);
+    assert(ts[7] == 6);
+
+    free(ts);
+    upo_dirgraph_destroy(graph); 
+    
+    upo_dirgraph_t cyclic_graph = NULL;
+
+    assert(upo_topological_sort(cyclic_graph) == NULL);
+
+    cyclic_graph = upo_dirgraph_create();
+
+    assert(upo_topological_sort(cyclic_graph) == NULL);
+
+    // Test case: https://www.youtube.com/watch?v=Zlk2FX-8RYs
+    for (int i = 0; i < 8; i++)
+        upo_add_vertex(cyclic_graph);
+    upo_add_edge(cyclic_graph, 0, 2);
+    upo_add_edge(cyclic_graph, 1, 6);
+    upo_add_edge(cyclic_graph, 2, 4);
+    upo_add_edge(cyclic_graph, 2, 5);
+    upo_add_edge(cyclic_graph, 3, 1);
+    upo_add_edge(cyclic_graph, 3, 5);
+    upo_add_edge(cyclic_graph, 3, 7);
+    upo_add_edge(cyclic_graph, 4, 6);
+    upo_add_edge(cyclic_graph, 4, 7);
+    upo_add_edge(cyclic_graph, 5, 1);
+    upo_add_edge(cyclic_graph, 5, 3);
+    upo_add_edge(cyclic_graph, 5, 6);
+    upo_add_edge(cyclic_graph, 5, 7);
+    upo_add_edge(cyclic_graph, 6, 5);
+    upo_add_edge(cyclic_graph, 7, 5);
+
+    assert(upo_topological_sort(cyclic_graph) == NULL);
+
+    upo_dirgraph_destroy(cyclic_graph);
+}
+
 int main()
 {
     printf("Test case 'create/destroy'... ");
@@ -728,6 +801,11 @@ int main()
     printf("Test case 'cyclic/DAG'... ");
     fflush(stdout);
     test_cyclic_DAG();
+    printf("OK\n");
+
+    printf("Test case 'topological sort'... ");
+    fflush(stdout);
+    test_topological_sort();
     printf("OK\n");
 
     return 0;
