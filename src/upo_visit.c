@@ -52,9 +52,7 @@ int* upo_BFS(upo_dirgraph_t graph, int source)
             iterator = upo_get_next(iterator);
         }
         color[u] = BLACK;                                       // Una volta iterati tutti i vertici incidenti, il vertice diventa BLACK
-        int* deletingVertex = (int*)upo_queue_peek(queue);      // Viene assegnato il puntatore al vertice che verrà tolto dalla coda
-        upo_queue_dequeue(queue, 0);
-        free(deletingVertex);                                   // per poterne liberare la memoria
+        upo_queue_dequeue(queue, 1);                            // Viene tolto un elemento dalla coda
         upo_destroy_list(list);                                 // La lista di vertici incidenti non è più necessaria
     }
     upo_queue_destroy(queue, 0);                                // La coda viene distrutta
@@ -76,38 +74,38 @@ int* upo_DFS_tot(upo_dirgraph_t graph)
     int n = upo_num_vertices(graph);
     if (n < 1)
         return NULL;    
-    int* parentVector = malloc(sizeof(int) * n); 
+    int* parentVector = malloc(sizeof(int) * n);                // Si istanzia la memoria per l'array dei padri da ritornare
     int color[n];                                
     for (int i = 0; i < n; i++)
     {
         parentVector[i] = -1;                                   // Si inizializzano gli array parent e color a -1
         color[i] = WHITE;                                       // e WHITE rispettivamente
     }
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++)                                 // Per ogni nodo
     {
-        if (color[i] == WHITE)
-            upo_DFS_tot_ric(graph, i, n, color, parentVector);
+        if (color[i] == WHITE)                                  // bianco
+            upo_DFS_tot_ric(graph, i, n, color, parentVector);  // si richiama la funzione ricorsiva
     }
     return parentVector;
 }
 
 void upo_DFS_tot_ric(upo_dirgraph_t graph, int u, int n, int* color, int* parentVector)
 {
-    color[u] = GRAY;
+    color[u] = GRAY;                                            // Il nodo appena visitato viene settato a GREY
     upo_list_t list = upo_get_inc_out_edg(graph, u);
     upo_iterator iterator = upo_get_list_iterator(list);
-    while (iterator != NULL)
+    while (iterator != NULL)                                    // Si itera su tutti i nodi con vertice uscente da u
     {
         upo_dir_edge_t edge = (upo_dir_edge_t)upo_get_iterator_element(iterator);
-        int v = edge->to;
-        if (color[v] == WHITE)
+        int v = edge->to;                                   
+        if (color[v] == WHITE)                                  // Se il vertice considerato è WHITE
         {
-            parentVector[v] = u;
-            upo_DFS_tot_ric(graph, v, n, color, parentVector);
+            parentVector[v] = u;                                // Si memorizza il padre
+            upo_DFS_tot_ric(graph, v, n, color, parentVector);  // E si chiama di nuovo la funzione ricorsiva
         }
         iterator = upo_get_next(iterator);
     }
-    color[u] = BLACK;
+    color[u] = BLACK;                                           // Al ritorno della ricorsione si può settare il nodo a BLACK
     upo_destroy_list(list);
 }
 
