@@ -8,6 +8,8 @@
 void upo_DFS_tot_ric(upo_dirgraph_t graph, int u, int n, int* color, int* parentVector);
 int upo_cyclic_ric(upo_dirgraph_t graph, int u, int* color);
 void upo_topological_sort_ric(upo_dirgraph_t graph, int u, int n, int* color, int* ts, int* t);
+void upo_scc_DFS_tot_ric(upo_dirgraph_t graph, int u, int n, int* color, int* vertexList, int* t);
+void upo_DFS_tot_transposed_ric(upo_dirgraph_t graph, int u, int n, int* color, int* parentVector);
 
 /**
  * @brief Effettua una visita in ampiezza BFS semplice di un grafo graph a partire da un vertice sorgente source
@@ -228,7 +230,76 @@ void upo_topological_sort_ric(upo_dirgraph_t graph, int u, int n, int* color, in
  * @return la foresta delle componenti fortemente connesse restituita dall'algoritmo di Kosaraju
  *
  */
-int* upo_strongly_connected_components(upo_dirgraph_t graph) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+int* upo_strongly_connected_components(upo_dirgraph_t graph) 
+{
+    if (graph == NULL)
+        return NULL;
+    int n = upo_num_vertices(graph);
+    if (n < 1)
+        return NULL;   
+    int* vertexList = malloc(sizeof(int) * n);
+    int* t = malloc(sizeof(int));
+    *t = n - 1;
+    int color[n];                  
+    for (int i = 0; i < n; i++)
+        color[i] = WHITE;
+    for (int i = 0; i < n; i++)                                 
+        if (color[i] == WHITE)                                  
+            upo_scc_DFS_tot_ric(graph, i, n, color, vertexList, t);
+
+    for (int i = 0; i < n; i++)
+        printf("vertexList[%d] = %d\n", i, vertexList[i]);
+
+    int* cfc = malloc(sizeof(int) * n);
+    for (int i = 0; i < n; i++)
+    {
+        cfc[i] = -1;
+        color[i] = WHITE;
+    }
+    for (int i = 0; i < n; i++)
+        if (color[vertexList[i]] == WHITE)
+            upo_DFS_tot_transposed_ric(graph, vertexList[i], n, color, cfc);
+    free(vertexList);
+    free(t);
+    return cfc;
+}
+
+void upo_scc_DFS_tot_ric(upo_dirgraph_t graph, int u, int n, int* color, int* vertexList, int* t)
+{
+    color[u] = GRAY;                                            // Il nodo appena visitato viene settato a GREY
+    upo_list_t list = upo_get_inc_out_edg(graph, u);
+    upo_iterator iterator = upo_get_list_iterator(list);
+    while (iterator != NULL)                                    // Si itera su tutti i nodi con vertice uscente da u
+    {
+        upo_dir_edge_t edge = (upo_dir_edge_t)upo_get_iterator_element(iterator);
+        int v = edge->to;                                   
+        if (color[v] == WHITE)                                  // Se il vertice considerato è WHITE
+            upo_scc_DFS_tot_ric(graph, v, n, color, vertexList, t);  // si chiama di nuovo la funzione ricorsiva
+        iterator = upo_get_next(iterator);
+    }
+    color[u] = BLACK;                                           // Al ritorno della ricorsione si può settare il nodo a BLACK
+    vertexList[*t] = u;
+    (*t)--;
+    upo_destroy_list(list);
+}
+
+void upo_DFS_tot_transposed_ric(upo_dirgraph_t graph, int u, int n, int* color, int* parentVector)
+{
+    color[u] = GRAY;                                            // Il nodo appena visitato viene settato a GREY
+    upo_list_t list = upo_get_inc_in_edg(graph, u);
+    upo_iterator iterator = upo_get_list_iterator(list);
+    while (iterator != NULL)                                    // Si itera su tutti i nodi con vertice entrante da u
+    {
+        upo_dir_edge_t edge = (upo_dir_edge_t)upo_get_iterator_element(iterator);
+        int v = edge->from;       
+        printf("u: %d - from: %d -> to: %d\n", u, edge->from, edge->to);                            
+        if (color[v] == WHITE)                                  // Se il vertice considerato è WHITE
+        {
+            parentVector[v] = u;                                // Si memorizza il padre
+            upo_DFS_tot_transposed_ric(graph, v, n, color, parentVector);  // E si chiama di nuovo la funzione ricorsiva
+        }
+        iterator = upo_get_next(iterator);
+    }
+    color[u] = BLACK;                                           // Al ritorno della ricorsione si può settare il nodo a BLACK
+    upo_destroy_list(list);
 }
