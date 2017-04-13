@@ -246,10 +246,6 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph)
     for (int i = 0; i < n; i++)                                 
         if (color[i] == WHITE)                                  
             upo_scc_DFS_tot_ric(graph, i, n, color, vertexList, t);
-
-    for (int i = 0; i < n; i++)
-        printf("vertexList[%d] = %d\n", i, vertexList[i]);
-
     int* cfc = malloc(sizeof(int) * n);
     for (int i = 0; i < n; i++)
     {
@@ -292,7 +288,6 @@ void upo_DFS_tot_transposed_ric(upo_dirgraph_t graph, int u, int n, int* color, 
     {
         upo_dir_edge_t edge = (upo_dir_edge_t)upo_get_iterator_element(iterator);
         int v = edge->from;       
-        printf("u: %d - from: %d -> to: %d\n", u, edge->from, edge->to);                            
         if (color[v] == WHITE)                                  // Se il vertice considerato è WHITE
         {
             parentVector[v] = u;                                // Si memorizza il padre

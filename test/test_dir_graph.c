@@ -511,7 +511,7 @@ void test_print_graph()
 
     string = upo_print_graph(graph);
 
-    printf("%s", string);
+    // printf("%s", string);
     free(string);
     upo_dirgraph_destroy(graph);
 }
@@ -774,58 +774,59 @@ void test_strongly_connected_components()
 
     int* cfc = upo_strongly_connected_components(graph);
 
-    for (int i = 0; i < 6; i++)
-        printf("cfc[%d] = %d\n", i, cfc[i]);
-
     assert(cfc != NULL);
     assert(cfc[0] == -1);
-    assert(cfc[1] == 3);
-    assert(cfc[2] == 1);
+    assert(cfc[1] == 2);
+    assert(cfc[2] == 3);
+
     assert(cfc[3] == -1);
+
     assert(cfc[4] == -1);
     assert(cfc[5] == 4);
+
+    free(cfc);
+    upo_dirgraph_destroy(graph);
+
+    graph = upo_dirgraph_create();
 
     /**
     * Test case: https://www.dir.uniupo.it/pluginfile.php/302330/mod_resource/content/1/10%20GrafiComponentiFortementeConnesse.pdf
     * page 2 slide 1
     */
-    // for (int i = 0; i < 10; i++)
-    //     upo_add_vertex(graph);
-    // upo_add_edge(graph, 0, 4);
-    // upo_add_edge(graph, 0, 5);
-    // upo_add_edge(graph, 1, 0);
-    // upo_add_edge(graph, 2, 1);
-    // upo_add_edge(graph, 2, 3);
-    // upo_add_edge(graph, 2, 6);
-    // upo_add_edge(graph, 3, 2);
-    // upo_add_edge(graph, 4, 0);
-    // upo_add_edge(graph, 4, 7);
-    // upo_add_edge(graph, 5, 1);
-    // upo_add_edge(graph, 5, 4);
-    // upo_add_edge(graph, 5, 7);
-    // upo_add_edge(graph, 6, 2);
-    // upo_add_edge(graph, 6, 5);
-    // upo_add_edge(graph, 6, 8);
-    // upo_add_edge(graph, 8, 7);
-    // upo_add_edge(graph, 8, 9);
-    // upo_add_edge(graph, 9, 8);
+    for (int i = 0; i < 10; i++)
+        upo_add_vertex(graph);
+    upo_add_edge(graph, 0, 4);
+    upo_add_edge(graph, 0, 5);
+    upo_add_edge(graph, 1, 0);
+    upo_add_edge(graph, 2, 1);
+    upo_add_edge(graph, 2, 3);
+    upo_add_edge(graph, 2, 6);
+    upo_add_edge(graph, 3, 2);
+    upo_add_edge(graph, 4, 0);
+    upo_add_edge(graph, 4, 7);
+    upo_add_edge(graph, 5, 1);
+    upo_add_edge(graph, 5, 4);
+    upo_add_edge(graph, 5, 7);
+    upo_add_edge(graph, 6, 2);
+    upo_add_edge(graph, 6, 5);
+    upo_add_edge(graph, 6, 8);
+    upo_add_edge(graph, 8, 7);
+    upo_add_edge(graph, 8, 9);
+    upo_add_edge(graph, 9, 8);
     
-    // int* cfc = upo_strongly_connected_components(graph);
+    cfc = upo_strongly_connected_components(graph);
 
-    // for (int i = 0; i < 10; i++)
-    //     printf("cfc[%d] = %d\n", i, cfc[i]);
-
-    // assert(cfc != NULL);
-    // assert(cfc[0] == -1);
-    // assert(cfc[1] == 5);
-    // assert(cfc[2] == -1);
-    // assert(cfc[3] == 2);
-    // assert(cfc[4] == 0);
-    // assert(cfc[5] == 4);
-    // assert(cfc[6] == 2);
-    // assert(cfc[7] == -1);
-    // assert(cfc[8] == -1);
-    // assert(cfc[9] == 8);
+    assert(cfc != NULL);
+    assert(cfc[0] == -1);
+    assert(cfc[1] == 0);
+    assert(cfc[2] == -1);
+    assert(cfc[3] == 2);
+    assert(cfc[4] == 0);
+    assert(cfc[5] == 1);
+    assert(cfc[6] == 2);
+    assert(cfc[7] == -1);
+    assert(cfc[8] == -1);
+    assert(cfc[9] == 8);
 
     free(cfc);
     upo_dirgraph_destroy(graph);
