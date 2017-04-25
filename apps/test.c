@@ -30,6 +30,7 @@ enum action_e {
     DAG,
     TOP,
     CFC,
+    MENU,
     QUIT
 };
 typedef enum action_e action;
@@ -65,7 +66,7 @@ void print_menu()
     printf("eout \t vertex \t\t Archi uscenti da un vertice\n");
     printf("ein \t vertex \t\t Archi entranti da un vertice\n");
     printf("einc \t vertex \t\t Archi incidenti a un vertice\n");
-    printf("addv \t number \t\t Aggiunge un numero [number] di vertici al grafo\n");
+    printf("addv \t number \t\t Aggiunge un numero <number> di vertici al grafo\n");
     printf("hasv \t vertex \t\t Controlla se il grafo ha il dato vertice\n");
     printf("remv \t vertex \t\t Rimozione del vertice\n");
     printf("adde \t vertex1 vertex2 \t Aggiunge un arco che esce da vertex1 ed entra in vertex2\n");
@@ -77,10 +78,11 @@ void print_menu()
     printf("BFS \t source \t\t Visita in ampiezza del grafo\n");
     printf("DFS \t\t\t\t Visita in profondità totale del grafo\n");
     printf("cyc \t\t\t\t Controlla se il grafo contiene dei cicli\n");
-    printf("DAG \t\t\t\t Controlla se un grafo graph e' un DAG\n");
+    printf("DAG \t\t\t\t Controlla se un grafo e' un DAG\n");
     printf("top \t\t\t\t Ordinamento topologico del grafo\n");
     printf("cfc \t\t\t\t Componenti fortemente connesse del grafo\n");
     printf("\n");
+    printf("m \t\t\t\t Menu\n");
     printf("q \t\t\t\t Quit\n");
     for (int i = 0; i < n; i++)
         printf("=");
@@ -141,6 +143,8 @@ action string_to_action(char* action)
         return TOP;
     if (strncmp(action, "cfc", 3) == 0)
         return CFC;
+    if (strncmp(action, "m", 1) == 0)
+        return MENU;
     if (strncmp(action, "q", 1) == 0)
         return QUIT;
     return NOT_VALID;
@@ -173,18 +177,15 @@ void get_command(command_t command)
 
     int argc = 0; 
     char** argv = NULL;                                     // argv conterrà l'elenco dei parametri passati
-    char* p = strtok(input, " ");                           // Si usa strtok con lo spazio come separatore
-    while (p)                                               // Si cicla finchè ci sono parametri searati da spazi
+    char* token = strtok(input, " ");                       // Si usa strtok con lo spazio come separatore
+    while (token)                                           // Si cicla finchè ci sono parametri searati da spazi
     {
         argv = realloc(argv, sizeof(char*) * ++argc);       // Ad ogni iterazione si rialloca lo spazio
         if (argv == NULL)
-            exit (-1);
-        argv[argc - 1] = p;                                 // Si inserisce l'ultimo parametro letto
-        p = strtok(NULL, " ");
+            exit(-1);
+        argv[argc - 1] = token;                             // Si inserisce l'ultimo parametro letto
+        token = strtok(NULL, " ");
     }
-    argv = realloc(argv, sizeof(char*) * (argc + 1));       // Si alloca spazio per il terminatore
-    argv[argc] = 0;
-
     command->action = string_to_action(argv[0]);
     command->param1 = 0;
     command->param2 = 0;
@@ -239,18 +240,18 @@ void execute_command(command_t command)
     {
         case NOT_VALID:
         {
-            printf("\nComando non valido!\n");
+            printf("Comando non valido!\n");
         } break;
         case CREATE:
         {
             if (graph == NULL)
             {
                 graph = upo_dirgraph_create();
-                printf("\nGrafo creato\n");
+                printf("Grafo creato\n");
             }
             else
             {
-                printf("\nGrafo già creato\n");
+                printf("Grafo già creato\n");
             }
         } break;
         case DESTROY:
@@ -258,69 +259,69 @@ void execute_command(command_t command)
             int res = upo_dirgraph_destroy(graph);
             if (res < 1)
             {
-                printf("\nImpossibile distruggere il grafo (già distrutto?)\n");
+                printf("Impossibile distruggere il grafo (già distrutto?)\n");
             }
             else
             {
                 graph = NULL;
-                printf("\nGrafo distrutto\n");
+                printf("Grafo distrutto\n");
             }
         } break;
         case VNUM:
         {
             int n = upo_num_vertices(graph);
             if (n == -1)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste\n");
             else
-                printf("\nIl grafo ha %d vertici\n", n);
+                printf("Il grafo ha %d vertici\n", n);
         } break;
         case ENUM:
         {
             int n = upo_num_edges(graph);
             if (n == -1)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste\n");
             else
-                printf("\nIl grafo ha %d archi\n", n);
+                printf("Il grafo ha %d archi\n", n);
         } break;
         case DIN:
         {
             int n = upo_get_in_degree(graph, param1);
             if (n == -1)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste\n");
             else
-                printf("\nIl grado entrante del vertice %d è %d\n", param1, n);
+                printf("Il grado entrante del vertice %d è %d\n", param1, n);
         } break;
         case DOUT:
         {
             int n = upo_get_out_degree(graph, param1);
             if (n == -1)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste\n");
             else
-                printf("\nIl grado uscente del vertice %d è %d\n", param1, n);
+                printf("Il grado uscente del vertice %d è %d\n", param1, n);
         } break;
         case DTOT:
         {
             int n = upo_get_degree(graph, param1);
             if (n == -1)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste\n");
             else
-                printf("\nIl grado complessivo del vertice %d è %d\n", param1, n);
+                printf("Il grado complessivo del vertice %d è %d\n", param1, n);
         } break;
         case EMPTY:
         {
             int n = upo_is_graph_empty(graph);
             if (n == -1)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste\n");
             else if (n == 0)
-                printf("\nIl grafo non è vuoto\n");
+                printf("Il grafo non è vuoto\n");
             else
-                printf("\nIl grado è vuoto\n");
+                printf("Il grado è vuoto\n");
         } break;
         case VADJ:
         {
             upo_list_t list = upo_get_adj_vert(graph, param1);
             if (list == NULL)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste\n");
             else
                 print_list(list);
         } break;
@@ -328,7 +329,7 @@ void execute_command(command_t command)
         {
             upo_list_t list = upo_get_inc_out_edg(graph, param1);
             if (list == NULL)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste\n");
             else
                 print_list(list);            
         } break;
@@ -336,7 +337,7 @@ void execute_command(command_t command)
         {
             upo_list_t list = upo_get_inc_in_edg(graph, param1);
             if (list == NULL)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste\n");
             else
                 print_list(list);            
         } break;
@@ -344,7 +345,7 @@ void execute_command(command_t command)
         {
             upo_list_t list = upo_get_inc_edg(graph, param1);
             if (list == NULL)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste\n");
             else
                 print_list(list);            
         } break;
@@ -353,86 +354,86 @@ void execute_command(command_t command)
             if (graph == NULL)
             {
                 graph = upo_dirgraph_create();
-                printf("\nGrafo creato\n");
+                printf("Grafo creato\n");
             }
             for (int i = 0; i < param1; i++)
                 upo_add_vertex(graph);
-            printf("\nAggiunti %d vertici al grafo\n", param1);
+            printf("Aggiunti %d vertici al grafo\n", param1);
         } break;
         case HASV:
         {
             int n = upo_has_vertex(graph, param1);
             if (n == -1)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste\n");
             else if (n == 0)
-                printf("\nIl vertice %d non è presente\n", param1);
+                printf("Il vertice %d non è presente\n", param1);
             else
-                printf("\nIl vertice %d è presente\n", param1);
+                printf("Il vertice %d è presente\n", param1);
         } break;
         case REMV:
         {
             int n = upo_remove_vertex(graph, param1);
             if (n == -1)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste\n");
             else if (n == 0)
-                printf("\nIl vertice %d non è stato eliminato\n", param1);
+                printf("Il vertice %d non è stato eliminato\n", param1);
             else
-                printf("\nIl vertice %d è stato eliminato\n", param1); 
+                printf("Il vertice %d è stato eliminato\n", param1); 
         } break;
         case ADDE:
         {
             int n = upo_add_edge(graph, param1, param2);
             if (n == -1)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste\n");
             else if (n == 0)
-                printf("\nL'arco %d -> %d non è stato aggiunto\n", param1, param2);
+                printf("L'arco %d -> %d non è stato aggiunto\n", param1, param2);
             else
-                printf("\nL'arco %d -> %d è stato aggiunto\n", param1, param2);
+                printf("L'arco %d -> %d è stato aggiunto\n", param1, param2);
         } break;
         case HASE:
         {
             int n = upo_has_edge(graph, param1, param2);
             if (n == -1)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste\n");
             else if (n == 0)
-                printf("\nL'arco %d -> %d non è presente\n", param1, param2);
+                printf("L'arco %d -> %d non è presente\n", param1, param2);
             else
-                printf("\nL'arco %d -> %d è presente\n", param1, param2);
+                printf("L'arco %d -> %d è presente\n", param1, param2);
         } break;
         case REME:
         {
             int n = upo_remove_edge(graph, param1, param2);
             if (n == -1)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste\n");
             else if (n == 0)
-                printf("\nL'arco %d -> %d non è stato eliminato\n", param1, param2);
+                printf("L'arco %d -> %d non è stato eliminato\n", param1, param2);
             else
-                printf("\nL'arco %d -> %d è stato eliminato\n", param1, param2);
+                printf("L'arco %d -> %d è stato eliminato\n", param1, param2);
         } break;
         case ADJ:
         {
             int n = upo_are_adj(graph, param1, param2);
             if (n == -1)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste\n");
             else if (n == 0)
-                printf("\nI vertici %d e %d non sono adiacenti\n", param1, param2);
+                printf("I vertici %d e %d non sono adiacenti\n", param1, param2);
             else
-                printf("\nI vertici %d e %d sono adiacenti\n", param1, param2);
+                printf("I vertici %d e %d sono adiacenti\n", param1, param2);
         } break;
         case PRINT:
         {
             char* string = upo_print_graph(graph);
             if (string == NULL)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste\n");
             else
-                printf("\n%s", string);
+                printf("%s", string);
             free(string);
         } break;
         case BFS:
         {
             int* res = upo_BFS(graph, param1);   
             if (res == NULL)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste o non ci sono vertici\n");
             else
                 print_visit(res);
         } break;
@@ -440,7 +441,7 @@ void execute_command(command_t command)
         {
             int* res = upo_DFS_tot(graph);   
             if (res == NULL)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste o non ci sono vertici\n");
             else
                 print_visit(res);
         } break;
@@ -448,27 +449,27 @@ void execute_command(command_t command)
         {
             int res = upo_cyclic(graph);
             if (res == -1)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste o non ci sono vertici\n");
             else if (res == 0)
-                printf("\nIl non contiene cicli\n");
+                printf("Il non contiene cicli\n");
             else
-                printf("\nIl contiene cicli\n");
+                printf("Il contiene cicli\n");
         } break;
         case DAG:
         {
             int res = upo_is_DAG(graph);
             if (res == -1)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste o non ci sono vertici\n");
             else if (res == 0)
-                printf("\nIl non è un DAG\n");
+                printf("Il non è un DAG\n");
             else
-                printf("\nIl è un DAG\n");
+                printf("Il è un DAG\n");
         } break;
         case TOP:
         {
             int* res = upo_topological_sort(graph);
             if (res == NULL)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste o non ci sono vertici\n");
             else
                 print_visit(res);
         } break;
@@ -476,9 +477,13 @@ void execute_command(command_t command)
         {
             int* res = upo_strongly_connected_components(graph); 
             if (res == NULL)
-                printf("\nIl grafo non esiste\n");
+                printf("Il grafo non esiste o non ci sono vertici\n");
             else
                 print_cfc(res);
+        } break;
+        case MENU:
+        {
+            print_menu();
         } break;
         case QUIT:
         {
@@ -492,9 +497,9 @@ int main()
 {
     quit = 0;
     command_t command = malloc(sizeof(struct command_s));
+    print_menu();
     while (!quit)
     {
-        print_menu();
         get_command(command);
         execute_command(command);
     }
