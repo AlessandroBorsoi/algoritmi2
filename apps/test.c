@@ -15,7 +15,7 @@ enum action_e {
     VADJ,
     EOUT,
     EIN,
-    EINC,
+    INC,
     ADDV,
     HASV,
     REMV,
@@ -65,7 +65,7 @@ void print_menu()
     printf("vadj \t vertex \t\t Vertici adiacenti a un vertice\n");
     printf("eout \t vertex \t\t Archi uscenti da un vertice\n");
     printf("ein \t vertex \t\t Archi entranti da un vertice\n");
-    printf("einc \t vertex \t\t Archi incidenti a un vertice\n");
+    printf("inc \t vertex \t\t Archi incidenti a un vertice\n");
     printf("addv \t number \t\t Aggiunge un numero <number> di vertici al grafo\n");
     printf("hasv \t vertex \t\t Controlla se il grafo ha il dato vertice\n");
     printf("remv \t vertex \t\t Rimozione del vertice\n");
@@ -113,8 +113,8 @@ action string_to_action(char* action)
         return EOUT;
     if (strncmp(action, "ein", 3) == 0)
         return EIN;
-    if (strncmp(action, "einc", 4) == 0)
-        return EINC;
+    if (strncmp(action, "inc", 3) == 0)
+        return INC;
     if (strncmp(action, "addv", 4) == 0)
         return ADDV;
     if (strncmp(action, "hasv", 4) == 0)
@@ -152,7 +152,7 @@ action string_to_action(char* action)
 
 int one_param_required(action action)
 {
-    enum action_e one_param_actions[] = {DIN, DOUT, DTOT, VADJ, EOUT, EIN, EINC, ADDV, HASV, REMV, BFS};
+    enum action_e one_param_actions[] = {DIN, DOUT, DTOT, VADJ, EOUT, EIN, INC, ADDV, HASV, REMV, BFS};
     int res = 0;
     for (int i = 0; i < 11; i++)
         res += (action == one_param_actions[i]);
@@ -215,7 +215,15 @@ void get_command(command_t command)
 
 void print_list(upo_list_t list)
 {
-    // TODO: implementare
+    upo_iterator iterator = upo_get_list_iterator(list);
+    if (iterator == NULL)
+        printf("Nessun elemento trovato\n");
+    while (iterator != NULL)  
+    {
+        upo_dir_edge_t edge = (upo_dir_edge_t)upo_get_iterator_element(iterator);
+        printf("%d -> %d\n", edge->from, edge->to);
+        iterator = upo_get_next(iterator);
+    }
     upo_destroy_list(list);
 }
 
@@ -341,7 +349,7 @@ void execute_command(command_t command)
             else
                 print_list(list);            
         } break;
-        case EINC:
+        case INC:
         {
             upo_list_t list = upo_get_inc_edg(graph, param1);
             if (list == NULL)
