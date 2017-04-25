@@ -33,10 +33,10 @@ enum action_e {
     MENU,
     QUIT
 };
-typedef enum action_e action;
+typedef enum action_e action_t;
 
 struct command_s {
-    action action;
+    action_t action;
     int param1;
     int param2;
 };
@@ -52,7 +52,8 @@ void print_menu()
     for (int i = 0; i < n; i++)
         printf("=");
     printf("\n");
-    printf("Scegliere una opzione:\n\n");
+    printf("Scegliere una opzione:\n");
+    printf("\n");
     printf("COMMAND\t PARAM1  PARAM2 \t DESCRIZIONE\n");
     printf("create \t\t\t\t Creare un grafo\n");
     printf("destroy \t\t\t Distruggere il grafo creato\n");
@@ -89,7 +90,7 @@ void print_menu()
     printf("\n");
 }
 
-action string_to_action(char* action)
+action_t string_to_action(char* action)
 {
     if (strncmp(action, "create", 6) == 0)
         return CREATE;
@@ -150,18 +151,18 @@ action string_to_action(char* action)
     return NOT_VALID;
 }
 
-int one_param_required(action action)
+int one_param_required(action_t action)
 {
-    enum action_e one_param_actions[] = {DIN, DOUT, DTOT, VADJ, EOUT, EIN, INC, ADDV, HASV, REMV, BFS};
+    action_t one_param_actions[] = {DIN, DOUT, DTOT, VADJ, EOUT, EIN, INC, ADDV, HASV, REMV, BFS};
     int res = 0;
     for (int i = 0; i < 11; i++)
         res += (action == one_param_actions[i]);
     return res;
 }
 
-int two_param_required(action action)
+int two_param_required(action_t action)
 {
-    enum action_e two_param_actions[] = {ADDE, HASE, REME, ADJ};
+    action_t two_param_actions[] = {ADDE, HASE, REME, ADJ};
     int res = 0;
     for (int i = 0; i < 4; i++)
         res += (action == two_param_actions[i]);
@@ -241,7 +242,7 @@ void print_cfc(int* cfc)
 
 void execute_command(command_t command)
 {
-    action action = command->action;
+    action_t action = command->action;
     int param1 = command->param1;
     int param2 = command->param2;
     switch (action)
