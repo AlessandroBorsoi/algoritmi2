@@ -207,9 +207,6 @@ void get_command(command_t command)
             command->param2 = atoi(argv[2]);
         }
     }
-    // printf("argc: %d\n", argc);
-    // for (int i = 0; i < (argc + 1); ++i)
-    //     printf("argv[%d] = %s\n", i, argv[i]);
     free(argv);
     free(input);
 }
@@ -234,9 +231,99 @@ void print_visit(int* visit)
     free(visit);
 }
 
-void print_cfc(int* cfc)
+void print_matrix(int** matrix, int rows, int columns)
 {
-    // TODO: implementare
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < columns; j++)
+            printf("%d\t", matrix[i][j]);
+        printf("\n");
+    }
+}
+
+void print_cfc(int* cfc, int n)
+{
+    int m = 0;
+    // int inserted = 0;
+    int checked[n];
+    // Conta delle radici per sapere quante righe creare
+    for (int i = 0; i < n; i++)
+    {
+        checked[i] = 0;
+        if (cfc[i] == -1)
+            m++;
+    }
+
+    // Viene creata la matrice degli insiemi
+    int** cfc_matrix = NULL;                           
+    cfc_matrix = malloc(sizeof(int*) * m);
+    for (int i = 0; i < m; i++)
+        cfc_matrix[i] = malloc(sizeof(int) * n);            
+    // E inizializzata a -1
+    for (int i = 0; i < m; i++)
+        for (int j = 0; j < n; j++)
+            cfc_matrix[i][j] = -1;                          
+    
+    // Vengono inserite le radici al primo elemento
+    for (int i = 0, j = 0; i < n; i++)
+    {
+        if (cfc[i] == -1)
+        {
+            cfc_matrix[j][0] = i;
+            checked[i] = 1;
+            j++;
+        }
+    }
+
+    // Fino a quando tutti gli elementi non sono stati inseriti
+    for (int row = 0; row < m; row++)
+    {
+        for (int column = 1; column < n; column++)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                if (checked[i]) 
+                    continue;
+                int counter = column;
+                int found = 0;
+                while (counter > 0)
+                {
+                    --counter;
+                    if (cfc[i] == cfc_matrix[row][counter])
+                    {
+                        cfc_matrix[row][column] = i;
+                        checked[i] = 1;
+                        found = 1;
+                        break;
+                    }
+                }
+                if (found) break;
+            }
+        }
+    }
+    // print_matrix(cfc_matrix, m, n);
+
+    // Print della matrice
+    printf("Le cfc sono: { ");
+    for (int i = 0; i < m && cfc_matrix[i][0] > -1; i++)
+    {
+        if (i != 0)
+            printf(", ");
+        printf("{");
+        for (int j = 0; j < n && cfc_matrix[i][j] > -1; j++)
+        {
+            if (j != 0)
+                printf(", ");
+            printf("%d", cfc_matrix[i][j]);
+        }
+        printf("}");
+    }
+    printf(" }\n");
+
+    // Liberazione della memoria
+    for (int i = 0; i < m; i++)
+        free(cfc_matrix[i]);
+    free(cfc_matrix);
     free(cfc);
 }
 
@@ -470,9 +557,9 @@ void execute_command(command_t command)
             if (res == -1)
                 printf("Il grafo non esiste o non ci sono vertici\n");
             else if (res == 0)
-                printf("Il non è un DAG\n");
+                printf("Il grafo non è un DAG\n");
             else
-                printf("Il è un DAG\n");
+                printf("Il grafo è un DAG\n");
         } break;
         case TOP:
         {
@@ -488,7 +575,7 @@ void execute_command(command_t command)
             if (res == NULL)
                 printf("Il grafo non esiste o non ci sono vertici\n");
             else
-                print_cfc(res);
+                print_cfc(res, upo_num_vertices(graph));
         } break;
         case MENU:
         {
