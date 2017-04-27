@@ -235,7 +235,10 @@ void print_visit(int* visit, int n)
 
 void print_top(int* top, int n)
 {
-    // TODO: implementare
+    printf("L'ordinamento topologico è: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", top[i]);
+    printf("\n");
     free(top);
 }
 
