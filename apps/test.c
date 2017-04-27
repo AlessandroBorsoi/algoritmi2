@@ -225,10 +225,18 @@ void print_list(upo_list_t list)
     upo_destroy_list(list);
 }
 
-void print_visit(int* visit)
+void print_visit(int* visit, int n)
+{
+    for (int i = 0; i < n; i++)
+        if (visit[i] > -1 && visit[i] < n)
+            printf("%d -> %d;\n", visit[i], i);
+    free(visit);
+}
+
+void print_top(int* top, int n)
 {
     // TODO: implementare
-    free(visit);
+    free(top);
 }
 
 void print_matrix(int** matrix, int rows, int columns)
@@ -244,7 +252,6 @@ void print_matrix(int** matrix, int rows, int columns)
 void print_cfc(int* cfc, int n)
 {
     int m = 0;
-    // int inserted = 0;
     int checked[n];
     // Conta delle radici per sapere quante righe creare
     for (int i = 0; i < n; i++)
@@ -327,7 +334,7 @@ void print_cfc(int* cfc, int n)
     free(cfc);
 }
 
-void execute_command(command_t command)
+void execute_command(const command_t command)
 {
     action_t action = command->action;
     int param1 = command->param1;
@@ -531,7 +538,7 @@ void execute_command(command_t command)
             if (res == NULL)
                 printf("Il grafo non esiste o non ci sono vertici\n");
             else
-                print_visit(res);
+                print_visit(res, upo_num_vertices(graph));
         } break;
         case DFS:
         {
@@ -539,7 +546,7 @@ void execute_command(command_t command)
             if (res == NULL)
                 printf("Il grafo non esiste o non ci sono vertici\n");
             else
-                print_visit(res);
+                print_visit(res, upo_num_vertices(graph));
         } break;
         case CYC:
         {
@@ -547,9 +554,9 @@ void execute_command(command_t command)
             if (res == -1)
                 printf("Il grafo non esiste o non ci sono vertici\n");
             else if (res == 0)
-                printf("Il non contiene cicli\n");
+                printf("Il grafo non contiene cicli\n");
             else
-                printf("Il contiene cicli\n");
+                printf("Il grafo contiene cicli\n");
         } break;
         case DAG:
         {
@@ -567,7 +574,7 @@ void execute_command(command_t command)
             if (res == NULL)
                 printf("Il grafo non esiste o non ci sono vertici\n");
             else
-                print_visit(res);
+                print_top(res, upo_num_vertices(graph));
         } break;
         case CFC:
         {
