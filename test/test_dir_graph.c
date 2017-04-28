@@ -232,13 +232,13 @@ void test_vertex_degree()
     
     graph = upo_dirgraph_create();
     
-    assert(upo_get_in_degree(graph, 0) == 0);
-    assert(upo_get_out_degree(graph, 0) == 0);
-    assert(upo_get_degree(graph, 0) == 0);
+    assert(upo_get_in_degree(graph, 0) == -1);
+    assert(upo_get_out_degree(graph, 0) == -1);
+    assert(upo_get_degree(graph, 0) == -1);
     
-    assert(upo_get_in_degree(graph, 1) == 0);
-    assert(upo_get_out_degree(graph, 1) == 0);
-    assert(upo_get_degree(graph, 1) == 0);
+    assert(upo_get_in_degree(graph, 1) == -1);
+    assert(upo_get_out_degree(graph, 1) == -1);
+    assert(upo_get_degree(graph, 1) == -1);
 
     /**
     * Adj matrix n: 2

@@ -235,7 +235,7 @@ void print_visit(int* visit, int n)
 
 void print_top(int* top, int n)
 {
-    printf("L'ordinamento topologico è: ");
+    printf("L'ordinamento topologico trovato è: ");
     for (int i = 0; i < n; i++)
         printf("%d ", top[i]);
     printf("\n");
@@ -393,7 +393,7 @@ void execute_command(const command_t command)
         {
             int n = upo_get_in_degree(graph, param1);
             if (n == -1)
-                printf("Il grafo non esiste\n");
+                printf("Il grafo o il vertice passato come parametro non esiste\n");
             else
                 printf("Il grado entrante del vertice %d è %d\n", param1, n);
         } break;
@@ -401,7 +401,7 @@ void execute_command(const command_t command)
         {
             int n = upo_get_out_degree(graph, param1);
             if (n == -1)
-                printf("Il grafo non esiste\n");
+                printf("Il grafo o il vertice passato come parametro non esiste\n");
             else
                 printf("Il grado uscente del vertice %d è %d\n", param1, n);
         } break;
@@ -409,7 +409,7 @@ void execute_command(const command_t command)
         {
             int n = upo_get_degree(graph, param1);
             if (n == -1)
-                printf("Il grafo non esiste\n");
+                printf("Il grafo o il vertice passato come parametro non esiste\n");
             else
                 printf("Il grado complessivo del vertice %d è %d\n", param1, n);
         } break;
@@ -435,7 +435,7 @@ void execute_command(const command_t command)
         {
             upo_list_t list = upo_get_inc_out_edg(graph, param1);
             if (list == NULL)
-                printf("Il grafo non esiste\n");
+                printf("Il grafo o il vertice passato come parametro non esiste\n");
             else
                 print_list(list);            
         } break;
@@ -443,7 +443,7 @@ void execute_command(const command_t command)
         {
             upo_list_t list = upo_get_inc_in_edg(graph, param1);
             if (list == NULL)
-                printf("Il grafo non esiste\n");
+                printf("Il grafo o il vertice passato come parametro non esiste\n");
             else
                 print_list(list);            
         } break;
@@ -451,7 +451,7 @@ void execute_command(const command_t command)
         {
             upo_list_t list = upo_get_inc_edg(graph, param1);
             if (list == NULL)
-                printf("Il grafo non esiste\n");
+                printf("Il grafo o il vertice passato come parametro non esiste\n");
             else
                 print_list(list);            
         } break;

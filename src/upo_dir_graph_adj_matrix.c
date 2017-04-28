@@ -85,6 +85,8 @@ int upo_get_in_degree(upo_dirgraph_t graph, int vertex)
     if (graph == NULL)
         return -1;
     int n = upo_num_vertices(graph);
+    if (n < 1)
+        return -1;
     int degree = 0;
     if (n > 0 && vertex < n)
         for (int i = 0; i < n; i++)
@@ -104,6 +106,8 @@ int upo_get_out_degree(upo_dirgraph_t graph, int vertex)
     if (graph == NULL)
         return -1;
     int n = upo_num_vertices(graph);
+    if (n < 1)
+        return -1;
     int degree = 0;
     if (n > 0 && vertex < n)
         for (int i = 0; i < n; i++)
@@ -121,6 +125,9 @@ int upo_get_out_degree(upo_dirgraph_t graph, int vertex)
 int upo_get_degree(upo_dirgraph_t graph, int vertex)
 {
     if (graph == NULL)
+        return -1;
+    int n = upo_num_vertices(graph);
+    if (n < 1)
         return -1;
     return upo_get_in_degree(graph, vertex) + upo_get_out_degree(graph, vertex);
 }
@@ -178,7 +185,7 @@ upo_list_t upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex)
 {
     upo_list_t list = NULL;
     int n = upo_num_vertices(graph);
-    if (n > 0)
+    if (n > 0 && vertex < n)
     {
         list = upo_create_list(sizeof(struct upo_dir_edge_s), NULL);            // Si crea una lista di edges
         for (int i = 0; i < n; i++)
@@ -206,7 +213,7 @@ upo_list_t upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex)
 {
     upo_list_t list = NULL;
     int n = upo_num_vertices(graph);
-    if (n > 0)
+    if (n > 0 && vertex < n)
     {
         list = upo_create_list(sizeof(struct upo_dir_edge_s), NULL);            // Si crea una lista di edges
         for (int i = 0; i < n; i++)
@@ -234,7 +241,7 @@ upo_list_t upo_get_inc_edg(upo_dirgraph_t graph, int vertex)
 {
     upo_list_t list = NULL;
     int n = upo_num_vertices(graph);
-    if (n > 0)
+    if (n > 0 && vertex < n)
     {
         list = upo_create_list(sizeof(struct upo_dir_edge_s), NULL);            // Si crea una lista di edges
         for (int i = 0; i < n; i++)
