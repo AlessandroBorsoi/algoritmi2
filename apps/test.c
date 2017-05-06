@@ -151,6 +151,7 @@ action_t string_to_action(char* action)
     return NOT_VALID;
 }
 
+// Ritorna 1 se l'azione passata come parametro ha bisogno di esattamente un parametro. 0 altrimenti.
 int one_param_required(action_t action)
 {
     action_t one_param_actions[] = {DIN, DOUT, DTOT, VADJ, EOUT, EIN, INC, ADDV, HASV, REMV, BFS};
@@ -160,6 +161,7 @@ int one_param_required(action_t action)
     return res;
 }
 
+// Ritorna 1 se l'azione passata come parametro ha bisogno di esattamente due parametri. 0 altrimenti.
 int two_param_required(action_t action)
 {
     action_t two_param_actions[] = {ADDE, HASE, REME, ADJ};
@@ -169,6 +171,7 @@ int two_param_required(action_t action)
     return res;
 }
 
+// Fa il parsing della linea passata come input e popola il command con action e parametri.
 void get_command(command_t command)
 {
     printf("> ");
@@ -211,6 +214,7 @@ void get_command(command_t command)
     free(input);
 }
 
+// Utility per stampare una upo_list_t.
 void print_list(upo_list_t list)
 {
     upo_iterator iterator = upo_get_list_iterator(list);
@@ -225,6 +229,7 @@ void print_list(upo_list_t list)
     upo_destroy_list(list);
 }
 
+// Stampa il risultato di una visita
 void print_visit(int* visit, int n)
 {
     for (int i = 0; i < n; i++)
@@ -233,6 +238,7 @@ void print_visit(int* visit, int n)
     free(visit);
 }
 
+// Stampa un ordinamento topologico
 void print_top(int* top, int n)
 {
     printf("L'ordinamento topologico trovato è: ");
@@ -240,16 +246,6 @@ void print_top(int* top, int n)
         printf("%d ", top[i]);
     printf("\n");
     free(top);
-}
-
-void print_matrix(int** matrix, int rows, int columns)
-{
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < columns; j++)
-            printf("%d\t", matrix[i][j]);
-        printf("\n");
-    }
 }
 
 void print_cfc(int* cfc, int n)
@@ -311,7 +307,6 @@ void print_cfc(int* cfc, int n)
             }
         }
     }
-    // print_matrix(cfc_matrix, m, n);
 
     // Print della matrice
     printf("Le cfc sono: { ");
@@ -604,10 +599,10 @@ int main()
     quit = 0;
     command_t command = malloc(sizeof(struct command_s));
     print_menu();
-    while (!quit)
+    while (!quit)                   // Fino a che la funzione di quit non setta il valore a 1
     {
-        get_command(command);
-        execute_command(command);
+        get_command(command);       // Viene acquisito un comando
+        execute_command(command);   // E viene eseguito
     }
     free(command);
     return 0;
