@@ -1,4 +1,4 @@
-#Grafi pesati e Dijkstra
+# Grafi pesati e Dijkstra
 
 Utilizzando il codice dei compiti precedenti, si sviluppi il codice per gestire un grafo diretto pesato upo_wdirgraph_t implementato con matrice di adiacenza (si noti che può essere facilmente modificato il codice già sviluppato per grafi non pesati) e calcolare un albero dei cammini minimi con l'algoritmo di Dijkstra cmDijkstra(upo_wdirgraph_t graph, int s). Non è necessario che tutte le funzioni implementate siano riscritte. Si mantengano solo le funzioni utili alla gestione del grafo (creazione, distruzione, inserimento/rimozione nodi e archi) ed all'esecuzione dell'algoritmo di Dijkstra. Non è necessario mantenere, ad esempio, le funzioni che calcolano le componenti fortemente connesse.
 
