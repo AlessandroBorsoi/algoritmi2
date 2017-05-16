@@ -176,3 +176,82 @@ int upo_wremove_vertex(upo_wdirgraph_t graph, int vertex)
     }
     return 0;
 }
+
+/**
+ * @brief Aggiunge un arco al grafo. Se l'arco gia' esiste non fa nulla
+ *
+ * @param graph il grafo
+ * @param vertex1 da dove esce l'arco
+ * @param vertex2 dove entra l'arco
+ * @param weight il peso dell'arco
+ * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
+ */
+int upo_wadd_edge(upo_wdirgraph_t graph, int vertex1, int vertex2, int weight)
+{
+    if (graph == NULL)
+        return -1;
+    int n = upo_wnum_vertices(graph);
+    if (vertex1 < n && vertex2 < n)                     // Se i vertici esistono 
+    {                                                   
+        graph->adj[vertex1][vertex2] = weight;          // allora si aggiunge/modifica l'arco col peso
+        return 1;
+    }
+    return 0;
+}
+
+/**
+ * @brief Controlla l'esistenza di un arco nel grafo
+ *
+ * @param graph il grafo
+ * @param vertex1 da dove esce l'arco
+ * @param vertex2 dove entra l'arco
+ * @return 1 se il grafo contiene l'arco, -1 se il grafo e' nullo, 0 altrimenti
+ */
+int upo_whas_edge(upo_wdirgraph_t graph, int vertex1, int vertex2)
+{
+    if (graph == NULL)
+        return -1;
+    int n = upo_wnum_vertices(graph);
+    if (vertex1 < n && vertex2 < n)                             // Si controlla che i vertici esistano
+        return (graph->adj[vertex1][vertex2] != 0 ? 1 : 0);    // e si ritorna 1 o 0
+    return 0;
+}
+
+/**
+ * @brief Rimuove un arco dal grafo
+ *
+ * @param graph il grafo
+ * @param vertex1 da dove esce l'arco
+ * @param vertex2 dove entra l'arco
+ * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
+ */
+int upo_wremove_edge(upo_wdirgraph_t graph, int vertex1, int vertex2)
+{
+    if (graph == NULL)
+        return -1;
+    int n = upo_wnum_vertices(graph);
+    if (vertex1 < n && vertex2 < n && graph->adj[vertex1][vertex2] != 0)    // Viene rimosso l'arco solo se
+    {                                                                       // i vertici esistono e l'arco è presente
+        graph->adj[vertex1][vertex2] = 0;
+        return 1;
+    }
+    return 0;
+}
+
+/**
+ * @brief Restituisce il numero di archi del grafo
+ *
+ * @param graph il grafo
+ * @return il numero di archi del grafo, -1 se il grafo e' nullo
+ */
+int upo_wnum_edges(upo_wdirgraph_t graph)
+{
+    if (graph == NULL)
+        return -1;
+    int n = upo_wnum_vertices(graph);
+    int edges = 0;
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            edges += (graph->adj[i][j] != 0 ? 1 : 0);
+    return edges;
+}

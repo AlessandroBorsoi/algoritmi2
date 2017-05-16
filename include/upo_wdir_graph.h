@@ -55,4 +55,43 @@ int upo_whas_vertex(upo_wdirgraph_t graph, int vertex);
  */
 int upo_wremove_vertex(upo_wdirgraph_t graph, int vertex);
 
+/**
+ * @brief Aggiunge un arco al grafo. Se l'arco gia' esiste non fa nulla
+ *
+ * @param graph il grafo
+ * @param vertex1 da dove esce l'arco
+ * @param vertex2 dove entra l'arco
+ * @param weight il peso dell'arco
+ * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
+ */
+int upo_wadd_edge(upo_wdirgraph_t graph, int vertex1, int vertex2, int weight);
+
+/**
+ * @brief Controlla l'esistenza di un arco nel grafo
+ *
+ * @param graph il grafo
+ * @param vertex1 da dove esce l'arco
+ * @param vertex2 dove entra l'arco
+ * @return 1 se il grafo contiene l'arco, -1 se il grafo e' nullo, 0 altrimenti
+ */
+int upo_whas_edge(upo_wdirgraph_t graph, int vertex1, int vertex2);
+
+/**
+ * @brief Rimuove un arco dal grafo
+ *
+ * @param graph il grafo
+ * @param vertex1 da dove esce l'arco
+ * @param vertex2 dove entra l'arco
+ * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
+ */
+int upo_wremove_edge(upo_wdirgraph_t graph, int vertex1, int vertex2);
+
+/**
+ * @brief Restituisce il numero di archi del grafo
+ *
+ * @param graph il grafo
+ * @return il numero di archi del grafo, -1 se il grafo e' nullo
+ */
+int upo_wnum_edges(upo_wdirgraph_t graph);
+
 #endif /* UPO_WDIR_GRAPH_H */

@@ -4,6 +4,7 @@
 
 static void test_create_destroy();
 static void test_add_remove_vertex();
+static void test_add_remove_edges();
 
 /**
 * Funzioni testate:
@@ -115,6 +116,97 @@ void test_add_remove_vertex()
     upo_wdirgraph_destroy(graph);
 }
 
+/**
+* Funzioni testate:
+* int upo_wadd_edge(upo_wdirgraph_t graph, int vertex1, int vertex2, int weight);
+* int upo_wremove_edge(upo_wdirgraph_t graph, int vertex1, int vertex2);
+* int upo_whas_edge(upo_wdirgraph_t graph, int vertex1, int vertex2);
+* int upo_wnum_edges(upo_wdirgraph_t graph);
+*/
+void test_add_remove_edges()
+{
+    upo_wdirgraph_t graph = NULL;
+
+    assert(upo_wadd_edge(graph, 0, 1, 8) == -1);
+    assert(upo_whas_edge(graph, 0, 1) == -1);
+    assert(upo_wnum_edges(graph) == -1);
+    assert(upo_wremove_edge(graph, 0, 1) == -1);
+
+    graph = upo_wdirgraph_create();
+    
+    /**
+    * Adj matrix n: 0
+    */
+    assert(upo_wadd_edge(graph, 0, 1, 4) == 0);
+    assert(upo_whas_edge(graph, 0, 1) == 0);
+    assert(upo_wnum_edges(graph) == 0);
+    assert(upo_wremove_edge(graph, 0, 1) == 0);
+
+    upo_wadd_vertex(graph);
+
+    /**
+    * Adj matrix n: 1
+    */
+    assert(upo_wadd_edge(graph, 0, 1, 6) == 0);
+    assert(upo_whas_edge(graph, 0, 1) == 0);
+    assert(upo_wnum_edges(graph) == 0);
+    assert(upo_wremove_edge(graph, 0, 1) == 0);
+
+    upo_wadd_vertex(graph);
+    
+    /**
+    * Adj matrix n: 2
+    *   0   1
+    * 0 0   1
+    * 1 0   0
+    */
+    assert(upo_wadd_edge(graph, 0, 1, 3) == 1);
+    assert(upo_wadd_edge(graph, 0, 1, 4) == 1);
+    assert(upo_wadd_edge(graph, 0, 2, 9) == 0);
+    assert(upo_whas_edge(graph, 0, 1) == 1);
+    assert(upo_wnum_edges(graph) == 1);
+
+    /**
+    * Adj matrix n: 2
+    *   0   1
+    * 0 0   0
+    * 1 0   0
+    */
+    assert(upo_wremove_edge(graph, 0, 1) == 1);
+    assert(upo_wremove_edge(graph, 0, 1) == 0);
+    assert(upo_whas_edge(graph, 0, 1) == 0);
+    assert(upo_wnum_edges(graph) == 0);
+
+    /**
+    * Adj matrix n: 2
+    *   0   1
+    * 0 0   1
+    * 1 1   0
+    */
+    assert(upo_wadd_edge(graph, 0, 1, -22) == 1);
+    assert(upo_wadd_edge(graph, 1, 0, 2) == 1);
+    assert(upo_whas_edge(graph, 0, 1) == 1);
+    assert(upo_whas_edge(graph, 1, 0) == 1);
+    assert(upo_wnum_edges(graph) == 2);
+
+    /**
+    * Adj matrix n: 2
+    *   0   1
+    * 0 0   1
+    * 1 0   0
+    */
+    assert(upo_wremove_edge(graph, 1, 0) == 1);
+    assert(upo_whas_edge(graph, 1, 0) == 0);
+    assert(upo_whas_edge(graph, 0, 1) == 1);
+    assert(upo_wnum_edges(graph) == 1);
+    assert(upo_wremove_edge(graph, 1, 0) == 0);
+    assert(upo_wnum_edges(graph) == 1);
+    assert(upo_wremove_edge(graph, 0, 1) == 1);
+    assert(upo_wnum_edges(graph) == 0);
+
+    upo_wdirgraph_destroy(graph);
+}
+
 int main()
 {
     printf("Test case 'create/destroy'... ");
@@ -125,6 +217,11 @@ int main()
     printf("Test case 'add/remove vertices'... ");
     fflush(stdout);
     test_add_remove_vertex();
+    printf("OK\n");
+
+    printf("Test case 'add/remove edges'... ");
+    fflush(stdout);
+    test_add_remove_edges();
     printf("OK\n");
 
     return 0;
