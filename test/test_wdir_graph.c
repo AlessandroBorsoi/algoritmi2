@@ -5,6 +5,7 @@
 static void test_create_destroy();
 static void test_add_remove_vertex();
 static void test_add_remove_edges();
+static void test_dijkstra();
 
 /**
 * Funzioni testate:
@@ -122,6 +123,7 @@ void test_add_remove_vertex()
 * int upo_wremove_edge(upo_wdirgraph_t graph, int vertex1, int vertex2);
 * int upo_whas_edge(upo_wdirgraph_t graph, int vertex1, int vertex2);
 * int upo_wnum_edges(upo_wdirgraph_t graph);
+* int upo_weight(upo_wdirgraph_t graph, int vertex1, int vertex2);
 */
 void test_add_remove_edges()
 {
@@ -131,6 +133,7 @@ void test_add_remove_edges()
     assert(upo_whas_edge(graph, 0, 1) == -1);
     assert(upo_wnum_edges(graph) == -1);
     assert(upo_wremove_edge(graph, 0, 1) == -1);
+    assert(upo_weight(graph, 0, 1) == -1);
 
     graph = upo_wdirgraph_create();
     
@@ -141,6 +144,7 @@ void test_add_remove_edges()
     assert(upo_whas_edge(graph, 0, 1) == 0);
     assert(upo_wnum_edges(graph) == 0);
     assert(upo_wremove_edge(graph, 0, 1) == 0);
+    assert(upo_weight(graph, 0, 1) == 0);
 
     upo_wadd_vertex(graph);
 
@@ -151,13 +155,14 @@ void test_add_remove_edges()
     assert(upo_whas_edge(graph, 0, 1) == 0);
     assert(upo_wnum_edges(graph) == 0);
     assert(upo_wremove_edge(graph, 0, 1) == 0);
+    assert(upo_weight(graph, 0, 1) == 0);
 
     upo_wadd_vertex(graph);
     
     /**
     * Adj matrix n: 2
     *   0   1
-    * 0 0   1
+    * 0 0   4
     * 1 0   0
     */
     assert(upo_wadd_edge(graph, 0, 1, 3) == 1);
@@ -165,6 +170,8 @@ void test_add_remove_edges()
     assert(upo_wadd_edge(graph, 0, 2, 9) == 0);
     assert(upo_whas_edge(graph, 0, 1) == 1);
     assert(upo_wnum_edges(graph) == 1);
+    assert(upo_weight(graph, 0, 1) == 4);
+    assert(upo_weight(graph, 0, 2) == 0);
 
     /**
     * Adj matrix n: 2
@@ -176,18 +183,21 @@ void test_add_remove_edges()
     assert(upo_wremove_edge(graph, 0, 1) == 0);
     assert(upo_whas_edge(graph, 0, 1) == 0);
     assert(upo_wnum_edges(graph) == 0);
+    assert(upo_weight(graph, 0, 1) == 0);
 
     /**
     * Adj matrix n: 2
     *   0   1
-    * 0 0   1
-    * 1 1   0
+    * 0 0   -22
+    * 1 2   0
     */
     assert(upo_wadd_edge(graph, 0, 1, -22) == 1);
     assert(upo_wadd_edge(graph, 1, 0, 2) == 1);
     assert(upo_whas_edge(graph, 0, 1) == 1);
     assert(upo_whas_edge(graph, 1, 0) == 1);
     assert(upo_wnum_edges(graph) == 2);
+    assert(upo_weight(graph, 0, 1) == -22);
+    assert(upo_weight(graph, 1, 0) == 2);
 
     /**
     * Adj matrix n: 2
@@ -203,8 +213,16 @@ void test_add_remove_edges()
     assert(upo_wnum_edges(graph) == 1);
     assert(upo_wremove_edge(graph, 0, 1) == 1);
     assert(upo_wnum_edges(graph) == 0);
+    assert(upo_weight(graph, 0, 1) == 0);
+    assert(upo_weight(graph, 1, 0) == 0);
 
     upo_wdirgraph_destroy(graph);
+}
+
+
+void test_dijkstra()
+{
+
 }
 
 int main()
@@ -222,6 +240,11 @@ int main()
     printf("Test case 'add/remove edges'... ");
     fflush(stdout);
     test_add_remove_edges();
+    printf("OK\n");
+
+    printf("Test case 'Dijkstra'... ");
+    fflush(stdout);
+    test_dijkstra();
     printf("OK\n");
 
     return 0;

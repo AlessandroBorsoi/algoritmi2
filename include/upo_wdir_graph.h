@@ -94,4 +94,14 @@ int upo_wremove_edge(upo_wdirgraph_t graph, int vertex1, int vertex2);
  */
 int upo_wnum_edges(upo_wdirgraph_t graph);
 
+/**
+ * @brief Restituisce il peso di un arco del grafo
+ *
+ * @param graph il grafo
+ * @param vertex1 da dove esce l'arco
+ * @param vertex2 dove entra l'arco
+ * @return il peso dell'arco del grafo, -1 se il grafo e' nullo, 0 altrimenti
+ */
+int upo_weight(upo_wdirgraph_t graph, int vertex1, int vertex2);
+
 #endif /* UPO_WDIR_GRAPH_H */
