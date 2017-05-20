@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
+#include <upo_priority_queue.h>
 #include "upo_wdir_graph_adj_matrix.h"
 
 /**
@@ -272,4 +274,113 @@ int upo_weight(upo_wdirgraph_t graph, int vertex1, int vertex2)
     if (vertex1 < n && vertex2 < n)
         return graph->adj[vertex1][vertex2];
     return 0;
+}
+
+/**
+ * @brief Restituisce una lista contenente gli archi uscenti da vertex
+ *
+ * @param graph il grafo
+ * @param vertex il vertice
+ * @return una lista contenente gli archi uscenti da vertex, NULL se il grafo e' vuoto
+ */
+upo_list_t upo_wget_inc_out_edg(upo_wdirgraph_t graph, int vertex)
+{
+    upo_list_t list = NULL;
+    int n = upo_wnum_vertices(graph);
+    if (n > 0 && vertex < n)
+    {
+        list = upo_create_list(sizeof(struct upo_dir_edge_s), NULL);            // Si crea una lista di edges
+        for (int i = 0; i < n; i++)
+        {
+            if (graph->adj[vertex][i] != 0)                                     // Se l'arco è uscente lo si aggiunge alla lista
+            {
+                upo_dir_edge_t element = malloc(sizeof(struct upo_dir_edge_s));
+                element->from = vertex;
+                element->to = i;
+                upo_add_last(list, element);
+            }
+        }
+    }
+    return list;
+}
+
+/**
+ * @brief Restituisce il peso di un arco del grafo
+ *
+ * @param graph il grafo
+ * @param s il nodo di origine
+ * @return NULL se il grafo non esiste o è vuoto, altrimenti una matrice 2 per n dove la prima riga contiene
+ * il vettore dei padri e la seconda le distanze calcolate da Dijkstra.
+ */
+int** cmDijkstra(upo_wdirgraph_t graph, int s)
+{
+    if (graph == NULL)                                          // Se il grafo è NULL o non ci sono vertici viene tornato NULL
+        return NULL;
+    int n = upo_wnum_vertices(graph);
+    if (n < 1)
+        return NULL;
+    // INIZIALIZZA (G)
+    int** mat = malloc(sizeof(int*) * 2);
+    if (mat == NULL)
+    {
+        perror("Unable to create mat");
+        abort();
+    }
+    for (int i = 0; i < 2; i++)                 // Per ogni riga, alloco lo spazio per una colonna
+    {
+        mat[i] = malloc(sizeof(int) * n);
+        if (mat[i] == NULL)
+        {
+            perror("Unable to create the new mat row");
+            abort();
+        }
+    }
+    for (int i = 0; i < n; i++)
+    {
+        mat[0][i] = -1;
+        mat[1][i] = INT_MAX;
+    }
+    // D <- empty_priority_queue()
+    upo_priority_queue_t queue = upo_priority_queue_create();
+
+    // d[s] <- 0
+    mat[1][s] = 0;
+
+    // for ogni v in V[G]
+    //     enqueue(D,v,d[v])
+    for (int i = 0; i < n; i++)
+        upo_priority_queue_enqueue(queue, &i, mat[1][i]);
+
+    // while NotEmpty(D) do begin
+    //     u <- dequeue_min(D)
+    //     S <- S ∪ {u} //aggiungo u all’albero definitivamente
+    //     for ogni v adj ad u then
+    //         if d[v] > d[u] + W(u,v) then
+    //              π[v] <- u
+    //              d[v] <- d[u] + W(u,v)
+    //              decrease_key(D,v,d[v])
+    //     end for 
+    // end
+    while (upo_priority_queue_is_empty(queue) == 0)
+    {
+        int u = *((int*)upo_priority_queue_peek(queue));
+        upo_priority_queue_dequeue(queue, 0);
+        upo_list_t list = upo_wget_inc_out_edg(graph, u);
+        upo_iterator iterator = upo_get_list_iterator(list);
+        while (iterator != NULL) 
+        {
+            upo_dir_edge_t edge = (upo_dir_edge_t)upo_get_iterator_element(iterator);
+            int v = edge->to;
+            if (mat[1][v] > mat[1][u] + upo_weight(graph, u, v))
+            {
+                mat[0][v] = u;
+                mat[1][v] = mat[1][u] + upo_weight(graph, u, v);
+                upo_priority_queue_change(queue, &v, mat[1][v]);
+            }
+            iterator = upo_get_next(iterator);
+        }
+        upo_destroy_list(list);   
+    }
+    upo_priority_queue_destroy(queue, 0);
+    return mat;
 }

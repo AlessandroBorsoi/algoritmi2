@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <upo_wdir_graph.h>
 
@@ -219,10 +220,51 @@ void test_add_remove_edges()
     upo_wdirgraph_destroy(graph);
 }
 
-
+/**
+* Funzioni testate:
+* int** cmDijkstra(upo_wdirgraph_t graph, int s);
+*/
 void test_dijkstra()
 {
+    upo_wdirgraph_t graph = NULL;
+    
+    assert(cmDijkstra(graph, 0) == NULL);
 
+    graph = upo_wdirgraph_create();
+
+    assert(cmDijkstra(graph, 0) == NULL);
+
+    upo_wadd_vertex(graph);
+    upo_wadd_vertex(graph);
+    upo_wadd_vertex(graph);
+    upo_wadd_vertex(graph);
+    upo_wadd_vertex(graph);
+    upo_wadd_edge(graph, 0, 1, 3);
+    upo_wadd_edge(graph, 0, 2, 2);
+    upo_wadd_edge(graph, 0, 3, 4);
+    upo_wadd_edge(graph, 1, 4, 3);
+    upo_wadd_edge(graph, 2, 3, 3);
+    upo_wadd_edge(graph, 3, 4, 1);
+
+    int** mat = cmDijkstra(graph, 0);
+
+    assert(mat[0][0] == -1);
+    assert(mat[0][1] == 0);
+    assert(mat[0][2] == 0);
+    assert(mat[0][3] == 0);
+    assert(mat[0][4] == 3);
+
+    assert(mat[1][0] == 0);
+    assert(mat[1][1] == 3);
+    assert(mat[1][2] == 2);
+    assert(mat[1][3] == 4);
+    assert(mat[1][4] == 5);
+
+    free(mat[0]);
+    free(mat[1]);
+    free(mat);
+
+    upo_wdirgraph_destroy(graph);
 }
 
 int main()

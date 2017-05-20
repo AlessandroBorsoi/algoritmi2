@@ -1,7 +1,19 @@
 #ifndef UPO_WDIR_GRAPH_H
 #define UPO_WDIR_GRAPH_H
 
+#include "upo_list.h"
+
 typedef struct upo_wdirgraph_s *upo_wdirgraph_t;
+typedef struct upo_dir_edge_s *upo_dir_edge_t;
+
+/**
+ * @brief Definizione della struttura per rappresentare un arco diretto
+ */
+struct upo_dir_edge_s
+{
+    int from; /**< Vertice da cui l'arco esce. */
+    int to;   /**< Vertice nel quale l'arco entra. */
+};
 
 /**
  * @brief Crea un nuovo grafo orientato
@@ -103,5 +115,24 @@ int upo_wnum_edges(upo_wdirgraph_t graph);
  * @return il peso dell'arco del grafo, -1 se il grafo e' nullo, 0 altrimenti
  */
 int upo_weight(upo_wdirgraph_t graph, int vertex1, int vertex2);
+
+/**
+ * @brief Restituisce una lista contenente gli archi uscenti da vertex
+ *
+ * @param graph il grafo
+ * @param vertex il vertice
+ * @return una lista contenente gli archi uscenti da vertex, NULL se il grafo e' vuoto
+ */
+upo_list_t upo_wget_inc_out_edg(upo_wdirgraph_t graph, int vertex);
+
+/**
+ * @brief Restituisce il peso di un arco del grafo
+ *
+ * @param graph il grafo
+ * @param s il nodo di origine
+ * @return NULL se il grafo non esiste o è vuoto, altrimenti una matrice 2 per n dove la prima riga contiene
+ * il vettore dei padri e la seconda le distanze calcolate da Dijkstra.
+ */
+int** cmDijkstra(upo_wdirgraph_t graph, int s);
 
 #endif /* UPO_WDIR_GRAPH_H */

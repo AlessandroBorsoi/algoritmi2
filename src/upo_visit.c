@@ -40,7 +40,7 @@ int* upo_BFS(upo_dirgraph_t graph, int source)
     upo_queue_enqueue(queue, s);                    
     while (upo_queue_is_empty(queue) == 0) {                    // Finchè ci sono elementi nella coda...
         int u = *((int*)upo_queue_peek(queue));                 // Viene preso il primo elemento della coda u
-        upo_list_t list = upo_get_inc_out_edg(graph, u);        // Viene estratta la lista di tutti i vertici uscenti d u
+        upo_list_t list = upo_get_inc_out_edg(graph, u);        // Viene estratta la lista di tutti i vertici uscenti da u
         upo_iterator iterator = upo_get_list_iterator(list);
         while (iterator != NULL)                                // Vengono iterati tutti i vertici incidenti
         {
