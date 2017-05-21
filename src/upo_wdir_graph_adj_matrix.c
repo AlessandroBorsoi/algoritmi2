@@ -349,7 +349,7 @@ int** cmDijkstra(upo_wdirgraph_t graph, int s)
     // for ogni v in V[G]
     //     enqueue(D,v,d[v])
     for (int i = 0; i < n; i++)
-        upo_priority_queue_enqueue(queue, &i, mat[1][i]);
+        upo_priority_queue_enqueue(queue, i, mat[1][i]);
 
     // while NotEmpty(D) do begin
     //     u <- dequeue_min(D)
@@ -363,8 +363,7 @@ int** cmDijkstra(upo_wdirgraph_t graph, int s)
     // end
     while (upo_priority_queue_is_empty(queue) == 0)
     {
-        int u = *((int*)upo_priority_queue_peek(queue));
-        upo_priority_queue_dequeue(queue, 0);
+        int u = upo_priority_queue_dequeue(queue);
         upo_list_t list = upo_wget_inc_out_edg(graph, u);
         upo_iterator iterator = upo_get_list_iterator(list);
         while (iterator != NULL) 
@@ -375,12 +374,12 @@ int** cmDijkstra(upo_wdirgraph_t graph, int s)
             {
                 mat[0][v] = u;
                 mat[1][v] = mat[1][u] + upo_weight(graph, u, v);
-                upo_priority_queue_change(queue, &v, mat[1][v]);
+                upo_priority_queue_update(queue, v, mat[1][v]);
             }
             iterator = upo_get_next(iterator);
         }
         upo_destroy_list(list);   
     }
-    upo_priority_queue_destroy(queue, 0);
+    upo_priority_queue_destroy(queue);
     return mat;
 }

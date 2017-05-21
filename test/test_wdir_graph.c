@@ -2,10 +2,12 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <upo_wdir_graph.h>
+#include <upo_priority_queue.h>
 
 static void test_create_destroy();
 static void test_add_remove_vertex();
 static void test_add_remove_edges();
+static void test_priority_queue();
 static void test_dijkstra();
 
 /**
@@ -220,6 +222,47 @@ void test_add_remove_edges()
     upo_wdirgraph_destroy(graph);
 }
 
+void test_priority_queue()
+{
+    upo_priority_queue_t queue = NULL;
+
+    upo_priority_queue_enqueue(queue, 1, 3);
+    upo_priority_queue_dequeue(queue);
+    upo_priority_queue_update(queue, 1, 2);
+    assert(upo_priority_queue_is_empty(queue) == 1);
+
+    queue = upo_priority_queue_create();
+
+    assert(queue != NULL);
+    assert(upo_priority_queue_is_empty(queue) == 1);
+
+    upo_priority_queue_enqueue(queue, 1, 3);
+    upo_priority_queue_enqueue(queue, 5, 1);
+    upo_priority_queue_enqueue(queue, 22, 0);
+    upo_priority_queue_enqueue(queue, 2, 7);
+
+    assert(upo_priority_queue_is_empty(queue) == 0);
+    assert(upo_priority_queue_dequeue(queue) == 22);
+    assert(upo_priority_queue_dequeue(queue) == 5);
+    assert(upo_priority_queue_dequeue(queue) == 1);
+    assert(upo_priority_queue_dequeue(queue) == 2);
+    assert(upo_priority_queue_is_empty(queue) == 1);
+
+    upo_priority_queue_enqueue(queue, 66, 5);
+    upo_priority_queue_enqueue(queue, 66, 5);
+    upo_priority_queue_enqueue(queue, 6, 6);
+
+    assert(upo_priority_queue_is_empty(queue) == 0);
+
+    upo_priority_queue_update(queue, 6, 4);
+
+    assert(upo_priority_queue_dequeue(queue) == 6);
+    assert(upo_priority_queue_dequeue(queue) == 66);
+    assert(upo_priority_queue_is_empty(queue) == 1);
+    
+    upo_priority_queue_destroy(queue);
+}
+
 /**
 * Funzioni testate:
 * int** cmDijkstra(upo_wdirgraph_t graph, int s);
@@ -282,6 +325,11 @@ int main()
     printf("Test case 'add/remove edges'... ");
     fflush(stdout);
     test_add_remove_edges();
+    printf("OK\n");
+
+    printf("Test case 'priority queue'... ");
+    fflush(stdout);
+    test_priority_queue();
     printf("OK\n");
 
     printf("Test case 'Dijkstra'... ");
