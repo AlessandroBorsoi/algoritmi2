@@ -64,16 +64,20 @@ int upo_priority_queue_dequeue(upo_priority_queue_t queue)
     queue->node[1] = queue->node[queue->len];
     queue->len--;
     int i = 1, j, k;
-    while (1) {
+    while (1) 
+    {
         k = i;
         j = 2 * i;
-        if (j <= queue->len && queue->node[j].priority < queue->node[k].priority) {
+        if (j <= queue->len && queue->node[j].priority < queue->node[k].priority) 
+        {
             k = j;
         }
-        if (j + 1 <= queue->len && queue->node[j + 1].priority < queue->node[k].priority) {
+        if (j + 1 <= queue->len && queue->node[j + 1].priority < queue->node[k].priority) 
+        {
             k = j + 1;
         }
-        if (k == i) {
+        if (k == i) 
+        {
             break;
         }
         queue->node[i] = queue->node[k];

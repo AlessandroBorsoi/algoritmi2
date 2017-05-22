@@ -289,12 +289,12 @@ upo_list_t upo_wget_inc_out_edg(upo_wdirgraph_t graph, int vertex)
     int n = upo_wnum_vertices(graph);
     if (n > 0 && vertex < n)
     {
-        list = upo_create_list(sizeof(struct upo_dir_edge_s), NULL);            // Si crea una lista di edges
+        list = upo_create_list(sizeof(struct upo_wdir_edge_s), NULL);            // Si crea una lista di edges
         for (int i = 0; i < n; i++)
         {
             if (graph->adj[vertex][i] != 0)                                     // Se l'arco è uscente lo si aggiunge alla lista
             {
-                upo_dir_edge_t element = malloc(sizeof(struct upo_dir_edge_s));
+                upo_wdir_edge_t element = malloc(sizeof(struct upo_wdir_edge_s));
                 element->from = vertex;
                 element->to = i;
                 upo_add_last(list, element);
@@ -368,7 +368,7 @@ int** cmDijkstra(upo_wdirgraph_t graph, int s)
         upo_iterator iterator = upo_get_list_iterator(list);
         while (iterator != NULL) 
         {
-            upo_dir_edge_t edge = (upo_dir_edge_t)upo_get_iterator_element(iterator);
+            upo_wdir_edge_t edge = (upo_wdir_edge_t)upo_get_iterator_element(iterator);
             int v = edge->to;
             if (mat[1][v] > mat[1][u] + upo_weight(graph, u, v))
             {

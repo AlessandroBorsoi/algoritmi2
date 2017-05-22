@@ -4,12 +4,12 @@
 #include "upo_list.h"
 
 typedef struct upo_wdirgraph_s *upo_wdirgraph_t;
-typedef struct upo_dir_edge_s *upo_dir_edge_t;
+typedef struct upo_wdir_edge_s *upo_wdir_edge_t;
 
 /**
  * @brief Definizione della struttura per rappresentare un arco diretto
  */
-struct upo_dir_edge_s
+struct upo_wdir_edge_s
 {
     int from; /**< Vertice da cui l'arco esce. */
     int to;   /**< Vertice nel quale l'arco entra. */

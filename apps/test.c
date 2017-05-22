@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <upo_dir_graph.h>
+#include <upo_wdir_graph.h>
 #include <upo_visit.h>
 
 enum action_e {
@@ -30,6 +31,16 @@ enum action_e {
     DAG,
     TOP,
     CFC,
+    WCREATE,
+    WDESTROY,
+    WADDV,
+    WHASV,
+    WREMV,
+    WADDE,
+    WHASE,
+    WREME,
+    WEIGHT,
+    DIJ,
     MENU,
     QUIT
 };
@@ -39,11 +50,13 @@ struct command_s {
     action_t action;
     int param1;
     int param2;
+    int param3;
 };
 typedef struct command_s* command_t;
 
 int quit;
 upo_dirgraph_t graph = NULL;
+upo_wdirgraph_t wgraph = NULL;
 
 void print_menu()
 {
@@ -82,6 +95,17 @@ void print_menu()
     printf("DAG \t\t\t\t Controlla se un grafo e' un DAG\n");
     printf("top \t\t\t\t Ordinamento topologico del grafo\n");
     printf("cfc \t\t\t\t Componenti fortemente connesse del grafo\n");
+    printf("\n");
+    printf("wcreate \t\t\t Creare un grafo pesato\n");
+    printf("wdestroy \t\t\t Distruggere il grafo pesato creato\n");
+    printf("waddv \t number \t\t Aggiunge un numero <number> di vertici al grafo pesato\n");
+    printf("whasv \t vertex \t\t Controlla se il grafo pesato ha il dato vertice\n");
+    printf("wremv \t vertex \t\t Rimozione del vertice\n");
+    printf("wadde \t vertex1 vertex2 weight  Aggiunge un arco che esce da vertex1 ed entra in vertex2 e gli assegna il peso weight\n");
+    printf("whase \t vertex1 vertex2 \t Controlla se il grafo ha un arco che esce da vertex1 ed entra in vertex2\n");
+    printf("wreme \t vertex1 vertex2 \t Rimozione dell'arco che esce da vertex1 ed entra in vertex2\n");
+    printf("weight \t vertex1 vertex2 \t Ritorna il peso dell'arco che esce da vertex1 ed entra in vertex2\n");
+    printf("dij \t source \t\t Algoritmo di Dijkstra\n");
     printf("\n");
     printf("m \t\t\t\t Menu\n");
     printf("q \t\t\t\t Quit\n");
@@ -144,6 +168,26 @@ action_t string_to_action(char* action)
         return TOP;
     if (strncmp(action, "cfc", 3) == 0)
         return CFC;
+    if (strncmp(action, "wcreate", 7) == 0)
+        return WCREATE;
+    if (strncmp(action, "wdestroy", 8) == 0)
+        return WDESTROY;
+    if (strncmp(action, "waddv", 5) == 0)
+        return WADDV;
+    if (strncmp(action, "whasv", 5) == 0)
+        return WHASV;
+    if (strncmp(action, "wremv", 5) == 0)
+        return WREMV;
+    if (strncmp(action, "wadde", 5) == 0)
+        return WADDE;
+    if (strncmp(action, "whase", 5) == 0)
+        return WHASE;
+    if (strncmp(action, "wreme", 5) == 0)
+        return WREME;
+    if (strncmp(action, "weight", 6) == 0)
+        return WEIGHT;
+    if (strncmp(action, "dij", 3) == 0)
+        return DIJ;
     if (strncmp(action, "m", 1) == 0)
         return MENU;
     if (strncmp(action, "q", 1) == 0)
@@ -154,9 +198,9 @@ action_t string_to_action(char* action)
 // Ritorna 1 se l'azione passata come parametro ha bisogno di esattamente un parametro. 0 altrimenti.
 int one_param_required(action_t action)
 {
-    action_t one_param_actions[] = {DIN, DOUT, DTOT, VADJ, EOUT, EIN, INC, ADDV, HASV, REMV, BFS};
+    action_t one_param_actions[] = {DIN, DOUT, DTOT, VADJ, EOUT, EIN, INC, ADDV, HASV, REMV, BFS, WADDV, WHASV, WREMV, DIJ};
     int res = 0;
-    for (int i = 0; i < 11; i++)
+    for (int i = 0; i < 15; i++)
         res += (action == one_param_actions[i]);
     return res;
 }
@@ -164,10 +208,20 @@ int one_param_required(action_t action)
 // Ritorna 1 se l'azione passata come parametro ha bisogno di esattamente due parametri. 0 altrimenti.
 int two_param_required(action_t action)
 {
-    action_t two_param_actions[] = {ADDE, HASE, REME, ADJ};
+    action_t two_param_actions[] = {ADDE, HASE, REME, ADJ, WHASE, WREME, WEIGHT};
     int res = 0;
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 7; i++)
         res += (action == two_param_actions[i]);
+    return res;
+}
+
+// Ritorna 1 se l'azione passata come parametro ha bisogno di esattamente tre parametri. 0 altrimenti.
+int three_param_required(action_t action)
+{
+    action_t three_param_actions[] = {WADDE};
+    int res = 0;
+    for (int i = 0; i < 1; i++)
+        res += (action == three_param_actions[i]);
     return res;
 }
 
@@ -193,6 +247,7 @@ void get_command(command_t command)
     command->action = string_to_action(argv[0]);
     command->param1 = 0;
     command->param2 = 0;
+    command->param3 = 0;
     if (one_param_required(command->action))                // Se il comando prevede un parametro 
     {
         if (argc < 2)                                       // e non è stato passato
@@ -208,6 +263,17 @@ void get_command(command_t command)
         {
             command->param1 = atoi(argv[1]);
             command->param2 = atoi(argv[2]);
+        }
+    }
+    if (three_param_required(command->action))              // Se il comando prevede tre parametri
+    {
+        if (argc < 4)                                       // e non sono stati passati
+            command->action = NOT_VALID;                    // Il comando non è valido
+        else
+        {
+            command->param1 = atoi(argv[1]);
+            command->param2 = atoi(argv[2]);
+            command->param3 = atoi(argv[3]);
         }
     }
     free(argv);
@@ -337,6 +403,7 @@ void execute_command(const command_t command)
     action_t action = command->action;
     int param1 = command->param1;
     int param2 = command->param2;
+    int param3 = command->param3;
     switch (action)
     {
         case NOT_VALID:
@@ -582,6 +649,62 @@ void execute_command(const command_t command)
             else
                 print_cfc(res, upo_num_vertices(graph));
         } break;
+        case WCREATE:
+        {
+            if (wgraph == NULL)
+            {
+                wgraph = upo_wdirgraph_create();
+                printf("Grafo pesato creato\n");
+            }
+            else
+            {
+                printf("Grafo pesato già creato\n");
+            }
+        } break;
+        case WDESTROY:
+        {
+            int res = upo_wdirgraph_destroy(wgraph);
+            if (res < 1)
+            {
+                printf("Impossibile distruggere il grafo pesato (già distrutto?)\n");
+            }
+            else
+            {
+                wgraph = NULL;
+                printf("Grafo pesato distrutto\n");
+            }
+        } break;
+        case WADDV:
+        {
+            if (wgraph == NULL)
+            {
+                wgraph = upo_wdirgraph_create();
+                printf("Grafo pesato creato\n");
+            }
+            for (int i = 0; i < param1; i++)
+                upo_wadd_vertex(wgraph);
+            printf("Aggiunti %d vertici al grafo pesato\n", param1);
+        } break;
+        case WHASV:
+        {
+            int n = upo_whas_vertex(wgraph, param1);
+            if (n == -1)
+                printf("Il grafo pesato non esiste\n");
+            else if (n == 0)
+                printf("Il vertice %d non è presente\n", param1);
+            else
+                printf("Il vertice %d è presente\n", param1);
+        } break;
+        case WREMV:
+        {
+            int n = upo_wremove_vertex(wgraph, param1);
+            if (n == -1)
+                printf("Il grafo pesato non esiste\n");
+            else if (n == 0)
+                printf("Il vertice %d non è stato eliminato\n", param1);
+            else
+                printf("Il vertice %d è stato eliminato\n", param1); 
+        } break;
         case MENU:
         {
             print_menu();
@@ -589,6 +712,7 @@ void execute_command(const command_t command)
         case QUIT:
         {
             upo_dirgraph_destroy(graph);
+            upo_wdirgraph_destroy(wgraph);
             quit = 1;
         } break;
     }
