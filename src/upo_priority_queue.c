@@ -38,7 +38,7 @@ void upo_priority_queue_enqueue(upo_priority_queue_t queue, int data, int priori
         if (queue->node[i].data == data)
             return;
     // Se gli elementi nello heap occupano tutto lo spazio disponibile allora si raddoppia lo spazio.
-    if (queue->len == queue->size) 
+    if (queue->len + 1 >= queue->size) 
     {
         queue->size *= 2;
         queue->node = realloc(queue->node, sizeof(struct upo_priority_queue_node_s) * queue->size);
