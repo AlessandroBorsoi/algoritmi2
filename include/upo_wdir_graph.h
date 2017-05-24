@@ -125,6 +125,15 @@ int upo_weight(upo_wdirgraph_t graph, int vertex1, int vertex2);
  */
 upo_list_t upo_wget_inc_out_edg(upo_wdirgraph_t graph, int vertex);
 
+
+/**
+ * @brief Restituisce una stringa rappresentante il grafo, nella forma Vertice: v;\n v -> i;\n v -> j\n dove i e j sono i vertici adiacenti a v
+ *
+ * @param graph il grafo
+ * @return una stringa rappresentante il grafo
+ */
+char *upo_wprint_graph(upo_wdirgraph_t graph);
+
 /**
  * @brief Restituisce il peso di un arco del grafo
  *

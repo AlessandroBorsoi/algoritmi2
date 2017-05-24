@@ -40,6 +40,7 @@ enum action_e {
     WHASE,
     WREME,
     WEIGHT,
+    WPRINT,
     DIJ,
     MENU,
     QUIT
@@ -105,6 +106,7 @@ void print_menu()
     printf("whase \t vertex1 vertex2 \t Controlla se il grafo ha un arco che esce da vertex1 ed entra in vertex2\n");
     printf("wreme \t vertex1 vertex2 \t Rimozione dell'arco che esce da vertex1 ed entra in vertex2\n");
     printf("weight \t vertex1 vertex2 \t Ritorna il peso dell'arco che esce da vertex1 ed entra in vertex2\n");
+    printf("print \t\t\t\t Stampa il grafo pesato\n");
     printf("dij \t source \t\t Algoritmo di Dijkstra\n");
     printf("\n");
     printf("m \t\t\t\t Menu\n");
@@ -186,6 +188,8 @@ action_t string_to_action(char* action)
         return WREME;
     if (strncmp(action, "weight", 6) == 0)
         return WEIGHT;
+    if (strncmp(action, "wprint", 6) == 0)
+        return WPRINT;
     if (strncmp(action, "dij", 3) == 0)
         return DIJ;
     if (strncmp(action, "m", 1) == 0)
@@ -744,6 +748,15 @@ void execute_command(const command_t command)
                 printf("L'arco %d -> %d non è presente\n", param1, param2);
             else
                 printf("L'arco %d -> %d ha peso %d\n", param1, param2, weight);
+        } break;
+        case WPRINT:
+        {
+            char* string = upo_wprint_graph(wgraph);
+            if (string == NULL)
+                printf("Il grafo pesato non esiste\n");
+            else
+                printf("%s", string);
+            free(string);
         } break;
         case DIJ:
         {

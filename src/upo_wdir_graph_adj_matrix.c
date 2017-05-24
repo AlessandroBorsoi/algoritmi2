@@ -305,6 +305,39 @@ upo_list_t upo_wget_inc_out_edg(upo_wdirgraph_t graph, int vertex)
 }
 
 /**
+ * @brief Restituisce una stringa rappresentante il grafo, nella forma Vertice: v;\n v -> i;\n v -> j\n dove i e j sono i vertici adiacenti a v
+ *
+ * @param graph il grafo
+ * @return una stringa rappresentante il grafo
+ */
+char *upo_wprint_graph(upo_wdirgraph_t graph)
+{
+    char* string = NULL;
+    int n = upo_wnum_vertices(graph);
+    if (n > 0)
+    {
+        int pos = 0;
+        int verticesBytes = sizeof(char) * 15 * n;                  // Calcolo lo spazio da allocare per la stringa
+        int edgesBytes = sizeof(char) * 15 * upo_wnum_edges(graph);  // come somma dello spazio che mi serve per i vertici
+        string = malloc(verticesBytes + edgesBytes);                // e per gli archi
+        upo_list_t list = NULL;
+        for (int i = 0; i < n; i++)                                 // Per ogni vertice stampo le informazioni richieste
+        {                                                           // tenendo conto della posizione di 'append' nella stringa
+            pos+= sprintf(&string[pos], "Vertice: %d;\n", i);
+            list = upo_wget_inc_out_edg(graph, i);
+            for (int j = 0; j < upo_list_size(list); j++)
+            {
+                int vertex1 = ((upo_wdir_edge_t)upo_get(list, j))->from;
+                int vertex2 = ((upo_wdir_edge_t)upo_get(list, j))->to;
+                pos+= sprintf(&string[pos], " %d -> %d; w: %d\n", vertex1, vertex2, upo_weight(graph, vertex1, vertex2));
+            }
+            upo_destroy_list(list);
+        }
+    }
+    return string;
+}
+
+/**
  * @brief Restituisce il peso di un arco del grafo
  *
  * @param graph il grafo
