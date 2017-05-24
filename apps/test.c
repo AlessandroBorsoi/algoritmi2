@@ -705,6 +705,49 @@ void execute_command(const command_t command)
             else
                 printf("Il vertice %d è stato eliminato\n", param1); 
         } break;
+        case WADDE:
+        {
+            int n = upo_wadd_edge(wgraph, param1, param2, param3);
+            if (n == -1)
+                printf("Il grafo pesato non esiste\n");
+            else if (n == 0)
+                printf("L'arco %d -> %d non è stato aggiunto\n", param1, param2);
+            else
+                printf("L'arco %d -> %d è stato aggiunto con peso %d\n", param1, param2, param3);
+        } break;
+        case WHASE:
+        {
+            int n = upo_whas_edge(wgraph, param1, param2);
+            if (n == -1)
+                printf("Il grafo pesato non esiste\n");
+            else if (n == 0)
+                printf("L'arco %d -> %d non è presente\n", param1, param2);
+            else
+                printf("L'arco %d -> %d è presente\n", param1, param2);
+        } break;
+        case WREME:
+        {
+            int n = upo_wremove_edge(wgraph, param1, param2);
+            if (n == -1)
+                printf("Il grafo pesato non esiste\n");
+            else if (n == 0)
+                printf("L'arco %d -> %d non è stato eliminato\n", param1, param2);
+            else
+                printf("L'arco %d -> %d è stato eliminato\n", param1, param2);
+        } break;
+        case WEIGHT:
+        {
+            int weight = upo_weight(wgraph, param1, param2);
+            if (weight == -1)
+                printf("Il grafo pesato non esiste\n");
+            else if (weight == 0)
+                printf("L'arco %d -> %d non è presente\n", param1, param2);
+            else
+                printf("L'arco %d -> %d ha peso %d\n", param1, param2, weight);
+        } break;
+        case DIJ:
+        {
+        } break;
         case MENU:
         {
             print_menu();
