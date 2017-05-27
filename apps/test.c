@@ -402,6 +402,13 @@ void print_cfc(int* cfc, int n)
     free(cfc);
 }
 
+void print_weight(int* weights, int s, int n)
+{
+    for (int i = 0; i < n; i++)
+        printf("%d --(%d)--> %d\n", s, weights[i], i);
+    free(weights);
+}
+
 void execute_command(const command_t command)
 {
     action_t action = command->action;
@@ -598,8 +605,10 @@ void execute_command(const command_t command)
             if (string == NULL)
                 printf("Il grafo non esiste\n");
             else
+            {
                 printf("%s", string);
-            free(string);
+                free(string);
+            }
         } break;
         case BFS:
         {
@@ -755,11 +764,22 @@ void execute_command(const command_t command)
             if (string == NULL)
                 printf("Il grafo pesato non esiste\n");
             else
+            {   
                 printf("%s", string);
-            free(string);
+                free(string);
+            }
         } break;
         case DIJ:
         {
+            int** dij = cmDijkstra(wgraph, param1);
+            if (dij == NULL)
+                printf("Il grafo pesato non esiste o è vuoto\n");
+            else
+            {
+                print_visit(dij[0], upo_wnum_vertices(wgraph));
+                print_weight(dij[1], param1, upo_wnum_vertices(wgraph));
+                free(dij);
+            }
         } break;
         case MENU:
         {
