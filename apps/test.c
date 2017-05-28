@@ -68,7 +68,7 @@ void print_menu()
     printf("\n");
     printf("Scegliere una opzione:\n");
     printf("\n");
-    printf("COMMAND\t PARAM1  PARAM2 \t DESCRIZIONE\n");
+    printf("COMMAND\t PARAM1  PARAM2  PARAM3  DESCRIZIONE\n");
     printf("create \t\t\t\t Creare un grafo\n");
     printf("destroy \t\t\t Distruggere il grafo creato\n");
     printf("vnum \t\t\t\t Numero di vertici del grafo\n");
@@ -106,7 +106,7 @@ void print_menu()
     printf("whase \t vertex1 vertex2 \t Controlla se il grafo ha un arco che esce da vertex1 ed entra in vertex2\n");
     printf("wreme \t vertex1 vertex2 \t Rimozione dell'arco che esce da vertex1 ed entra in vertex2\n");
     printf("weight \t vertex1 vertex2 \t Ritorna il peso dell'arco che esce da vertex1 ed entra in vertex2\n");
-    printf("print \t\t\t\t Stampa il grafo pesato\n");
+    printf("wprint \t\t\t\t Stampa il grafo pesato\n");
     printf("dij \t source \t\t Algoritmo di Dijkstra\n");
     printf("\n");
     printf("m \t\t\t\t Menu\n");
