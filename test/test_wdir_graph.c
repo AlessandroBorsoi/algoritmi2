@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <limits.h>
 #include <upo_wdir_graph.h>
 #include <upo_priority_queue.h>
 
@@ -302,6 +303,47 @@ void test_dijkstra()
     assert(mat[1][2] == 2);
     assert(mat[1][3] == 4);
     assert(mat[1][4] == 5);
+
+    free(mat[0]);
+    free(mat[1]);
+    free(mat);
+
+    upo_wdirgraph_destroy(graph);
+
+    graph = upo_wdirgraph_create();
+
+    upo_wadd_vertex(graph);
+    upo_wadd_vertex(graph);
+    upo_wadd_vertex(graph);
+    upo_wadd_vertex(graph);
+    upo_wadd_vertex(graph);
+    upo_wadd_vertex(graph);
+    upo_wadd_edge(graph, 0, 2, 1);
+    upo_wadd_edge(graph, 0, 3, 4);
+    upo_wadd_edge(graph, 1, 0, 7);
+    upo_wadd_edge(graph, 2, 1, 7);
+    upo_wadd_edge(graph, 2, 4, 6);
+    upo_wadd_edge(graph, 2, 3, 2);
+    upo_wadd_edge(graph, 3, 4, 2);
+    upo_wadd_edge(graph, 4, 1, 1);
+    upo_wadd_edge(graph, 5, 4, 5);
+    upo_wadd_edge(graph, 5, 1, 1);
+
+    mat = cmDijkstra(graph, 0);
+
+    assert(mat[0][0] == -1);
+    assert(mat[0][1] == 4);
+    assert(mat[0][2] == 0);
+    assert(mat[0][3] == 2);
+    assert(mat[0][4] == 3);
+    assert(mat[0][5] == -1);
+
+    assert(mat[1][0] == 0);
+    assert(mat[1][1] == 6);
+    assert(mat[1][2] == 1);
+    assert(mat[1][3] == 3);
+    assert(mat[1][4] == 5);
+    assert(mat[1][5] == 1000000);
 
     free(mat[0]);
     free(mat[1]);
