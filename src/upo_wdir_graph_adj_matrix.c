@@ -371,7 +371,7 @@ int** cmDijkstra(upo_wdirgraph_t graph, int s)
     for (int i = 0; i < n; i++)
     {
         mat[0][i] = -1;
-        mat[1][i] = 1000000;
+        mat[1][i] = INT_MAX;
     }
     // D <- empty_priority_queue()
     upo_priority_queue_t queue = upo_priority_queue_create();
